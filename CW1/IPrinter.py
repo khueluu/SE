@@ -2,7 +2,7 @@ import abc
 
 class IPrinter(abc.ABC):
     @abc.abstractmethod
-    def prinf(self, string: str):
+    def print(self, string: str):
         pass
 
 class ConsolePrinter(IPrinter):
@@ -14,5 +14,6 @@ class FilePrinter(IPrinter):
         self.file_path = file_path
 
     def print(self, string: str):
-        with open(self.file_path) as f:
+        with open(self.file_path, 'w+') as f:
             f.write(string)
+        print(f'Printed to {self.file_path}')
