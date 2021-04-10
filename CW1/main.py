@@ -1,11 +1,23 @@
 from IPrinter import ConsolePrinter, FilePrinter
-from IReporter import ConsoleReporter, FileReporter
+from IReporter import Reporter
+
+OUTPUT_PATH = './CW1/output.txt'
 
 def main():
-    console_reporter = ConsoleReporter('I am a Console Reporter', ConsolePrinter)
-    console_reporter.report()
+    # Initialize printers
+    console_printer = ConsolePrinter()
+    file_printer = FilePrinter(file_path=OUTPUT_PATH)
 
-    file_reporter = FileReporter('I am a File Reporter', './CW1/output.txt', FilePrinter)
+    # Initialize reporters
+    console_reporter = Reporter(
+        description='I am a Console Reporter.',
+        printer=console_printer)
+    file_reporter = Reporter(
+        description='I am a File Reporter.',
+        printer=file_printer)
+
+    # Report descriptions
+    console_reporter.report()
     file_reporter.report()
 
 if __name__ == '__main__':
