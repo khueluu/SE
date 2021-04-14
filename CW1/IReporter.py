@@ -5,11 +5,11 @@ class IReporter(abc.ABC):
         pass
 
 class Reporter(IReporter):
-    def __init__(self, description: str, printer):
+    def __init__(self, description: str, output):
         self.description = description
-        self.printer = printer
+        self.output = output
 
     def report(self):
-        self.printer.print(self.description)
+        self.output.print(self.description)
 
 

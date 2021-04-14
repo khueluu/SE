@@ -1,20 +1,20 @@
-from IPrinter import ConsolePrinter, FilePrinter
+from IOutput import ConsoleOutput, FileOutput
 from IReporter import Reporter
 
-OUTPUT_PATH = './CW1/output.txt'
+OUTPUT_PATH = '/Users/khueluu/Desktop/NSU/Sem2/SE/SE/CW1/output.txt'
 
 def main():
     # Initialize printers
-    console_printer = ConsolePrinter()
-    file_printer = FilePrinter(file_path=OUTPUT_PATH)
+    console_output = ConsoleOutput()
+    file_output = FileOutput(file_path=OUTPUT_PATH)
 
     # Initialize reporters
     console_reporter = Reporter(
         description='I am a Console Reporter.',
-        printer=console_printer)
+        output=console_output)
     file_reporter = Reporter(
         description='I am a File Reporter.',
-        printer=file_printer)
+        output=file_output)
 
     # Report descriptions
     console_reporter.report()

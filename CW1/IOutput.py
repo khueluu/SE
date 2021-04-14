@@ -1,15 +1,15 @@
 import abc
 
-class IPrinter(abc.ABC):
+class IOutput(abc.ABC):
     @abc.abstractmethod
     def print(self, string: str):
         pass
 
-class ConsolePrinter(IPrinter):
+class ConsoleOutput(IOutput):
     def print(self, string: str):
         print(string)
 
-class FilePrinter(IPrinter):
+class FileOutput(IOutput):
     def __init__(self, file_path):
         self.file_path = file_path
 
