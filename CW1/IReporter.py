@@ -6,11 +6,11 @@ class IReporter(abc.ABC):
         pass
 
 class Reporter(IReporter):
-    def __init__(self, description: str, text_output):
+    def __init__(self, description: str, stream):
         self.description = description
-        self.text_output = text_output
+        self.stream = stream
 
     def report(self):
-        self.text_output.write(self.description)
+        self.stream.write(self.description)
 
 
