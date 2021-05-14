@@ -12,11 +12,9 @@ def parse_user_input(user_input):
 def eval_maze_size(maze_size):
     try:
         maze_size = int(maze_size)
-        if maze_size < 4 or maze_size > 10:
-            print("Maze size must be from 4 to 10")
-            return False
+        assert (maze_size >= 4) and (maze_size <= 10)
     except:
-        print("Invalid maze size")
+        print("Maze size must be an integer from 4 to 10")
         return False
     return True
 
@@ -32,9 +30,12 @@ supported_commands = make_commands_dict(
     , GoLeft()
     , GoRight()
     , Skip()
+    , Start()
+    , Quit()
+    , Save()
     ])
 
-def set_maze_size():
+def create_maze():
     maze_size_selected = False
     while not maze_size_selected:
         maze_size = input("$> Select maze size from 4 to 10: ")
@@ -45,9 +46,6 @@ def set_maze_size():
 
 def play():
     finished = False
-    state = ""
-    message = ""
-    cmd = None
     try:
         while not(finished):
             user_input = input("$> ")
@@ -56,15 +54,15 @@ def play():
                 print(message)
                 continue
             else:
-                print(f"{cmd.capitalize()}: OK")
+                print(cmd)
     except KeyboardInterrupt:
-        print('\nBye bye')
+        print("\nQuit game")
     except:
         print("Unexpected error:", sys.exc_info()[0])
 
 if __name__ == "__main__":
     print("="*20, "Welcome to Labyrith", "="*20)
-    set_maze_size()
+    create_maze()
     play()
 
     
