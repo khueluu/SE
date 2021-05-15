@@ -2,25 +2,25 @@ from services.command import IUserCommand
 
 class GoUp(IUserCommand):
     def get_command_tag(self):
-        return 'go up'
+        return 'go_up'
     
     def execute(self): pass
 
 class GoDown(IUserCommand):
     def get_command_tag(self):
-        return 'go down'
+        return 'go_down'
 
     def execute(self): pass
 
 class GoLeft(IUserCommand):
     def get_command_tag(self):
-        return 'go left'
+        return 'go_left'
 
     def execute(self): pass
 
 class GoRight(IUserCommand):
     def get_command_tag(self):
-        return 'go right'
+        return 'go_right'
 
     def execute(self): pass
 
