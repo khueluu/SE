@@ -9,12 +9,12 @@ def parse_user_input(user_input):
         print("Command not supported")
     return cmd, ""
 
-def eval_maze_size(maze_size):
+def eval_labyrinth_size(size):
     try:
-        maze_size = int(maze_size)
-        assert (maze_size >= 4) and (maze_size <= 10)
+        size = int(size)
+        assert (size >= 4) and (size <= 10)
     except:
-        print("Maze size must be an integer from 4 to 10")
+        print("Labyrinth size must be an integer from 4 to 10")
         return False
     return True
 
@@ -35,14 +35,14 @@ supported_commands = make_commands_dict(
     , Save()
     ])
 
-def create_maze():
-    maze_size_selected = False
-    while not maze_size_selected:
-        maze_size = input("$> Select maze size from 4 to 10: ")
-        if eval_maze_size(maze_size):
-            maze_size = int(maze_size)
-            print(f"Created maze of size {maze_size}x{maze_size}")
-            maze_size_selected = True
+def create_labyrinth():
+    size_selected = False
+    while not size_selected:
+        size = input("$> Select labyrinth size from 4 to 10: ")
+        if eval_labyrinth_size(size):
+            size = int(size)
+            print(f"Created labyrinth of size {size}x{size}")
+            size_selected = True
 
 def play():
     finished = False
@@ -62,7 +62,7 @@ def play():
 
 if __name__ == "__main__":
     print("="*20, "Welcome to Labyrith", "="*20)
-    create_maze()
+    create_labyrinth()
     play()
 
     
