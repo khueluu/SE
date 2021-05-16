@@ -1,4 +1,7 @@
+import sys
+
 from services.command import IUserCommand
+from impl.objects import Labyrinth
 
 class GoUp(IUserCommand):
     def get_command_tag(self):
@@ -67,7 +70,8 @@ class Start(IUserCommand):
 
     def execute(self, labyrinth_size):
         if self.is_valid_size(size=labyrinth_size):
-            print(f"Created labyrinth of size {labyrinth_size}x{labyrinth_size}") 
+            labyrinth = Labyrinth(size=labyrinth_size)
+            print(f"Created labyrinth of size {labyrinth.size}x{abyrinth.size}") 
 
 
 class Quit(IUserCommand):
@@ -77,7 +81,8 @@ class Quit(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def execute(self): pass
+    def execute(self):
+        sys.exit("Quit game without saving")
     
 
 class Save(IUserCommand):

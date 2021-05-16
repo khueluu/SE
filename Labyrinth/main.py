@@ -11,6 +11,8 @@ def main():
             cmd, args = parse_user_input(user_input)
             if cmd and args:
                 cmd.execute(*args)
+            elif cmd:
+                cmd.execute()
   
     except KeyboardInterrupt:
         print("\nQuit game")
