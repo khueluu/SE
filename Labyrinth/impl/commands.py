@@ -4,46 +4,54 @@ class GoUp(IUserCommand):
     def get_command_tag(self):
         return 'up'
     
-    def execute(self): pass
+    def get_args_count(self):
+        return 0
 
 class GoDown(IUserCommand):
     def get_command_tag(self):
         return 'down'
 
-    def execute(self): pass
+    def get_args_count(self):
+        return 0
 
 class GoLeft(IUserCommand):
     def get_command_tag(self):
         return 'left'
 
-    def execute(self): pass
+    def get_args_count(self):
+        return 0
 
 class GoRight(IUserCommand):
     def get_command_tag(self):
         return 'right'
 
-    def execute(self): pass
+    def get_args_count(self):
+        return 0
 
 class Skip(IUserCommand):
     def get_command_tag(self):
         return 'skip'
 
-    def execute(self): pass
+    def get_args_count(self):
+        return 0
 
 class Start(IUserCommand):
     def get_command_tag(self):
         return 'start'
 
-    def execute(self): pass
+    def get_args_count(self):
+        return 1
 
 class Quit(IUserCommand):
     def get_command_tag(self):
         return 'quit'
 
-    def execute(self): pass
+    def get_args_count(self):
+        return 0
 
 class Save(IUserCommand):
     def get_command_tag(self):
         return 'save'
 
-    def execute(self): pass
+    def get_args_count(self):
+        return 1

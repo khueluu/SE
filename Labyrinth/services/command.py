@@ -5,6 +5,6 @@ class IUserCommand(metaclass = ABCMeta):
     def get_command_tag(self): pass
 
     @abstractmethod
-    def execute(self): pass
+    def get_args_count(self): pass
 
     # Returns: (finish?, state, msg)

@@ -1,8 +1,9 @@
+import networkx as nx
 from services.object import IObject
 
-class Maze(IObject):
+class Labyrinth(IObject):
     def get_name(self):
-        return 'maze'
+        return 'labyrinth'
 
 class Treasure(IObject):
     def get_name(self):
@@ -15,3 +16,4 @@ class Wormhole(IObject):
 class UserInventory(IObject):
     def get_name(self):
         return 'inventory'
+        
