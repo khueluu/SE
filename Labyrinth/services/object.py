@@ -2,4 +2,7 @@ from abc import *
 
 class IObject(metaclass=ABCMeta):
     @abstractmethod
-    def get_name(self): pass
+    def __str__(self): pass
+
+class IGameObject(IObject): pass
+class IUserObject(IObject): pass
