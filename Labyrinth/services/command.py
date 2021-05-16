@@ -7,4 +7,6 @@ class IUserCommand(metaclass = ABCMeta):
     @abstractmethod
     def get_args_count(self): pass
 
-    # Returns: (finish?, state, msg)
+    @abstractmethod
+    def execute(self, *args, **kwargs): pass
+
