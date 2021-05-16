@@ -11,6 +11,7 @@ class Cell:
             "left_wall": None,
             "right_wall": None
         }
+        self.treasure = False
 
     def __str__(self):
         return f"<Cell object at ({self.row}, {self.col})>"
@@ -21,7 +22,8 @@ class Labyrinth:
         self.size = size
         self.maze = self.create_maze(self.size)
         self.monoliths = self.set_monolith()
-        self.set_exit()
+        self.exit_cell = self.set_exit()
+        self.treasure_cell = self.set_treasure()
         
     def __str__(self):
         return f"<Labyrinth object of size ({self.size}x{self.size})>"
@@ -58,14 +60,23 @@ class Labyrinth:
         return monoliths
 
     def set_exit(self):
-        exit_row, exit_col, exit_wall = random.choice(self.monoliths)
-        self.maze[exit_row][exit_col].walls[exit_wall] = 'exit'
-        
+        row, col, wall = random.choice(self.monoliths)
+        self.maze[row][col].walls[wall] = 'exit'
+        return (row, col)
+
+    def set_treasure(self):
+        row, col = random.sample(range(self.size), k=2)
+        self.maze[row][col].treasure = True
+        return (row, col)
+
+    # def print_maze(self):
+    #     for row in range(self.size):
+    #         for col in range(self.size):
+    #             print(self.maze[row][col].walls)
 
 if __name__ == "__main__":
     lbr = Labyrinth(size=4)
-    maze = lbr.maze
-    for r, c, w in lbr.monoliths:
-        print(r, c, lbr[r][c].walls)
+    print(lbr.exit_cell, lbr.treasure_cell)
+    # lbr.print_maze()
 
     
