@@ -1,16 +1,16 @@
 from copy import deepcopy
 import random
 
-random.seed(1)
-
 class Cell:
     def __init__(self, row, col):
         self.row = row
         self.col = col
-        self.top_wall = None
-        self.bottom_wall = None
-        self.left_wall = None
-        self.right_wall = None
+        self.walls = {
+            "top_wall": None,
+            "bottom_wall": None,
+            "left_wall": None,
+            "right_wall": None
+        }
 
     def __str__(self):
         return f"<Cell object at ({self.row}, {self.col})>"
@@ -20,9 +20,9 @@ class Labyrinth:
     def __init__(self, size):
         self.size = size
         self.maze = self.create_maze(self.size)
-        self.monoliths = set()
-        self.set_monolith()
-    
+        self.monoliths = self.set_monolith()
+        self.set_exit()
+        
     def __str__(self):
         return f"<Labyrinth object of size ({self.size}x{self.size})>"
 
@@ -40,26 +40,32 @@ class Labyrinth:
         return deepcopy(maze)
 
     def set_monolith(self):
+        monoliths = []
         for row in range(self.size):
             for col in range(self.size):
                 if row == 0:
-                    self.maze[row][col].top_wall == 'monolith'
-                    self.monoliths.add(f'cell_{row}_{col}_top_wall')
+                    self.maze[row][col].walls["top_wall"] = 'monolith'
+                    monoliths.append((row, col, 'top_wall'))
                 if row == 3:
-                    self.maze[row][col].bottom_wall == 'monolith'
-                    self.monoliths.add(f'cell_{row}_{col}_bottom_wall')
+                    self.maze[row][col].walls["bottom_wall"] = 'monolith'
+                    monoliths.append((row, col, 'bottom_wall'))
                 if col == 0:
-                    self.maze[row][col].left_wall == 'monolith'
-                    self.monoliths.add(f'cell_{row}_{col}_left_wall')
+                    self.maze[row][col].walls["left_wall"] = 'monolith'
+                    monoliths.append((row, col, 'left_wall'))
                 if col == 3:
-                    self.maze[row][col].right_wall == 'monolith'
-                    self.monoliths.add(f'cell_{row}_{col}_right_wall')
+                    self.maze[row][col].walls["right_wall"] = 'monolith'
+                    monoliths.append((row, col, 'right_wall'))
+        return monoliths
 
-
-
+    def set_exit(self):
+        exit_row, exit_col, exit_wall = random.choice(self.monoliths)
+        self.maze[exit_row][exit_col].walls[exit_wall] = 'exit'
+        
 
 if __name__ == "__main__":
     lbr = Labyrinth(size=4)
     maze = lbr.maze
-    print(lbr.monoliths)
+    for r, c, w in lbr.monoliths:
+        print(r, c, lbr[r][c].walls)
+
     
