@@ -70,8 +70,8 @@ class Start(IUserCommand):
 
     def __call__(self, labyrinth_size):
         if self.is_valid_size(size=labyrinth_size):
-            labyrinth = Labyrinth(size=labyrinth_size)
-            print(f"Created labyrinth of size {labyrinth.size}x{labyrinth.size}") 
+            lbr = Labyrinth(size=int(labyrinth_size))
+            print(f"Created labyrinth of size {lbr.size}x{lbr.size}")
 
 
 class Quit(IUserCommand):

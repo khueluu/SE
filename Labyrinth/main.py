@@ -15,7 +15,7 @@ def main():
                 cmd()
   
     except KeyboardInterrupt:
-        print("\nQuit game")
+        print("\nQuit game without saving")
 
 if __name__ == "__main__":
     print("="*20, "Welcome to Labyrith", "="*20)
