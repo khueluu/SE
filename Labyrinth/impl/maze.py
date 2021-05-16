@@ -24,7 +24,9 @@ class Labyrinth:
         self.monoliths = self.set_monolith()
         self.exit_cell = self.set_exit()
         self.treasure_cell = self.set_treasure()
+        self.found_treasure = False
         self.set_walls()
+        self.current_cell = self.set_initial_cell()
         
     def __str__(self):
         return f"<Labyrinth object of size ({self.size}x{self.size})>"
@@ -94,6 +96,9 @@ class Labyrinth:
                         self.match_walls_between_two_cells(row, col, wall)
                         available_walls_num -= 1
 
+    def set_initial_cell(self):
+        return random.sample(range(self.size), k=2)
+
     def print_maze(self):
         for row in range(self.size):
             for col in range(self.size):
@@ -105,6 +110,6 @@ class Labyrinth:
 
 if __name__ == "__main__":
     lbr = Labyrinth(size=4)
-    lbr.print_maze()
+    print(lbr.current_cell)
 
     
