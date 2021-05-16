@@ -6,7 +6,6 @@ supported_commands = {
     "left": GoLeft(),
     "right": GoRight(),
     "skip": Skip(),
-    "start": Start(),
     "quit": Quit(),
     "save": Save(),
 }

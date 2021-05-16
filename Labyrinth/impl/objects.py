@@ -134,7 +134,6 @@ class Labyrinth(IObject):
         return wormholes_cells
     
 if __name__ == "__main__":
-    import numpy as np
     lbr = Labyrinth(size=4)
     for row, col in lbr.wormholes_cells:
         print(lbr[row][col])

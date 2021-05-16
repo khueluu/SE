@@ -10,7 +10,8 @@ class GoUp(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self): pass
+    def __call__(self, lbr): 
+        print(f'Go up from {lbr.current_cell}')
 
 
 class GoDown(IUserCommand):
@@ -20,7 +21,7 @@ class GoDown(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self): pass
+    def __call__(self, lbr): pass
 
 
 class GoLeft(IUserCommand):
@@ -30,7 +31,7 @@ class GoLeft(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self): pass
+    def __call__(self, lbr): pass
 
 
 class GoRight(IUserCommand):
@@ -40,7 +41,7 @@ class GoRight(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self): pass
+    def __call__(self, lbr): pass
 
 
 class Skip(IUserCommand):
@@ -50,28 +51,7 @@ class Skip(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self): pass
-
-
-class Start(IUserCommand):
-    def get_command_tag(self):
-        return 'start'
-
-    def get_args_count(self):
-        return 1
-
-    def is_valid_size(self, size):
-        try:
-            assert (int(size) >= 4) and (int(size) <= 10)
-        except:
-            print("Labyrinth size must be an integer from 4 to 10")
-            return False
-        return True
-
-    def __call__(self, labyrinth_size):
-        if self.is_valid_size(size=labyrinth_size):
-            lbr = Labyrinth(size=int(labyrinth_size))
-            print(f"Created labyrinth of size {lbr.size}x{lbr.size}")
+    def __call__(self, lbr): pass
 
 
 class Quit(IUserCommand):
@@ -81,7 +61,7 @@ class Quit(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self):
+    def __call__(self, lbr):
         sys.exit("Quit game without saving")
     
 
@@ -92,4 +72,4 @@ class Save(IUserCommand):
     def get_args_count(self):
         return 1
 
-    def __call__(self): pass
+    def __call__(self, lbr): pass
