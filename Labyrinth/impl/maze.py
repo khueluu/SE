@@ -24,6 +24,7 @@ class Labyrinth:
         self.monoliths = self.set_monolith()
         self.exit_cell = self.set_exit()
         self.treasure_cell = self.set_treasure()
+        self.set_walls()
         
     def __str__(self):
         return f"<Labyrinth object of size ({self.size}x{self.size})>"
@@ -48,13 +49,13 @@ class Labyrinth:
                 if row == 0:
                     self.maze[row][col].walls["top_wall"] = 'monolith'
                     monoliths.append((row, col, 'top_wall'))
-                if row == 3:
+                if row == self.size-1:
                     self.maze[row][col].walls["bottom_wall"] = 'monolith'
                     monoliths.append((row, col, 'bottom_wall'))
                 if col == 0:
                     self.maze[row][col].walls["left_wall"] = 'monolith'
                     monoliths.append((row, col, 'left_wall'))
-                if col == 3:
+                if col == self.size-1:
                     self.maze[row][col].walls["right_wall"] = 'monolith'
                     monoliths.append((row, col, 'right_wall'))
         return monoliths
@@ -69,14 +70,41 @@ class Labyrinth:
         self.maze[row][col].treasure = True
         return (row, col)
 
-    # def print_maze(self):
-    #     for row in range(self.size):
-    #         for col in range(self.size):
-    #             print(self.maze[row][col].walls)
+    def match_walls_between_two_cells(self, row, col, wall):
+        if wall == 'top_wall':
+            self.maze[row-1][col].walls['bottom_wall'] = 'normal_wall'
+        if wall == 'bottom_wall':
+            self.maze[row+1][col].walls['top_wall'] = 'normal_wall'
+        if wall == 'left_wall':
+            self.maze[row][col-1].walls['right_wall'] = 'normal_wall'
+        if wall == 'right_wall':
+            self.maze[row][col+1].walls['left_wall'] = 'normal_wall'
+        
+
+    def set_walls(self):
+        min_ = 1
+        for row in range(0, self.size, 2):
+            for col in range(self.size):
+                walls = self.maze[row][col].walls
+                available_walls_num = len([v for v in walls.values() if v is None])
+
+                for wall, value in walls.items():
+                    if (value is None) and (random.random() >= 0.5) and (available_walls_num > min_):
+                        self.maze[row][col].walls[wall] = 'normal_wall'
+                        self.match_walls_between_two_cells(row, col, wall)
+                        available_walls_num -= 1
+
+    def print_maze(self):
+        for row in range(self.size):
+            for col in range(self.size):
+                print({
+                    'cell': (row, col),
+                    'tresure_cell': self.treasure_cell,
+                    'walls': self.maze[row][col].walls
+                })
 
 if __name__ == "__main__":
     lbr = Labyrinth(size=4)
-    print(lbr.exit_cell, lbr.treasure_cell)
-    # lbr.print_maze()
+    lbr.print_maze()
 
     
