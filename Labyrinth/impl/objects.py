@@ -14,9 +14,18 @@ class Cell(IObject):
             "right_wall": None
         }
         self.treasure = False
+        self.wormhole = False
+        self.wormhole_idx = None
 
     def __str__(self):
-        return f"<Cell object at ({self.row}, {self.col})>"
+        return f"""
+            'row: {self.row},
+            'col': {self.col},
+            'walls': {self.walls},
+            'treasure': {self.treasure},
+            'wormhole': {self.wormhole},
+            'wormhole_idx': {self.wormhole_idx}
+        """
         
 
 class Labyrinth(IObject):
@@ -28,6 +37,7 @@ class Labyrinth(IObject):
         self.treasure_cell = self.set_treasure()
         self.found_treasure = False
         self.set_walls()
+        self.wormholes_cells = self.set_wormholes()
         self.current_cell = self.set_initial_cell()
         
     def __str__(self):
@@ -112,16 +122,20 @@ class Labyrinth(IObject):
 
     def set_wormholes(self):
         wormholes_cells = []
-        while len(wormholes_cells) <= 5:
+        while len(wormholes_cells) < 5:
             wh_cell = random.sample(range(self.size), k=2)
             if wh_cell not in wormholes_cells:
                 wormholes_cells.append(wh_cell)
 
+        for idx, (row, col) in enumerate(wormholes_cells):
+            self.maze[row][col].wormhole = True
+            self.maze[row][col].wormhole_idx = idx
+        
         return wormholes_cells
     
 if __name__ == "__main__":
     import numpy as np
     lbr = Labyrinth(size=4)
-    print(lbr.wormholes_cells)
+    for row, col in lbr.wormholes_cells:
+        print(lbr[row][col])
 
-    
