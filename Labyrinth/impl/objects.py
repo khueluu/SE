@@ -110,8 +110,18 @@ class Labyrinth(IObject):
                     'walls': self.maze[row][col].walls
                 })
 
+    def set_wormholes(self):
+        wormholes_cells = []
+        while len(wormholes_cells) <= 5:
+            wh_cell = random.sample(range(self.size), k=2)
+            if wh_cell not in wormholes_cells:
+                wormholes_cells.append(wh_cell)
+
+        return wormholes_cells
+    
 if __name__ == "__main__":
+    import numpy as np
     lbr = Labyrinth(size=4)
-    print(lbr.current_cell)
+    print(lbr.wormholes_cells)
 
     
