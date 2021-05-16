@@ -10,7 +10,7 @@ class GoUp(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def execute(self): pass
+    def __call__(self): pass
 
 
 class GoDown(IUserCommand):
@@ -20,7 +20,7 @@ class GoDown(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def execute(self): pass
+    def __call__(self): pass
 
 
 class GoLeft(IUserCommand):
@@ -30,7 +30,7 @@ class GoLeft(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def execute(self): pass
+    def __call__(self): pass
 
 
 class GoRight(IUserCommand):
@@ -40,7 +40,7 @@ class GoRight(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def execute(self): pass
+    def __call__(self): pass
 
 
 class Skip(IUserCommand):
@@ -50,7 +50,7 @@ class Skip(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def execute(self): pass
+    def __call__(self): pass
 
 
 class Start(IUserCommand):
@@ -68,10 +68,10 @@ class Start(IUserCommand):
             return False
         return True
 
-    def execute(self, labyrinth_size):
+    def __call__(self, labyrinth_size):
         if self.is_valid_size(size=labyrinth_size):
             labyrinth = Labyrinth(size=labyrinth_size)
-            print(f"Created labyrinth of size {labyrinth.size}x{abyrinth.size}") 
+            print(f"Created labyrinth of size {labyrinth.size}x{labyrinth.size}") 
 
 
 class Quit(IUserCommand):
@@ -81,7 +81,7 @@ class Quit(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def execute(self):
+    def __call__(self):
         sys.exit("Quit game without saving")
     
 
@@ -92,4 +92,4 @@ class Save(IUserCommand):
     def get_args_count(self):
         return 1
 
-    def execute(self): pass
+    def __call__(self): pass

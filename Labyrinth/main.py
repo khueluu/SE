@@ -10,9 +10,9 @@ def main():
             user_input = input("$> ")
             cmd, args = parse_user_input(user_input)
             if cmd and args:
-                cmd.execute(*args)
+                cmd(*args)
             elif cmd:
-                cmd.execute()
+                cmd()
   
     except KeyboardInterrupt:
         print("\nQuit game")

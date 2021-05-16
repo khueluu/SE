@@ -8,5 +8,5 @@ class IUserCommand(metaclass = ABCMeta):
     def get_args_count(self): pass
 
     @abstractmethod
-    def execute(self, *args, **kwargs): pass
+    def __call__(self, *args, **kwargs): pass
 
