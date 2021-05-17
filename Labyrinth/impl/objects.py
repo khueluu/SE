@@ -15,7 +15,7 @@ class Cell(IObject):
             "right_wall": None
         }
         self.treasure = False
-        self.wormhole = -1
+        self.wormhole_idx = -1
         self.is_current = False
 
     def __str__(self):
@@ -24,7 +24,7 @@ class Cell(IObject):
             'col': {self.col},
             'walls': {self.walls},
             'treasure': {self.treasure},
-            'wormhole': {self.wormhole},
+            'wormhole': {self.wormhole_idx},
             'is_current:' {self.is_current}
         """
         
