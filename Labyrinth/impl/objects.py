@@ -2,6 +2,7 @@ import random
 from copy import deepcopy
 
 from services.object import IObject
+random.seed(0)
 
 class Cell(IObject):
     def __init__(self, row, col):
