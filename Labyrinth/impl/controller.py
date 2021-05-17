@@ -1,3 +1,4 @@
+import sys
 movement_mapper = {
     'up': {
         'wall_to_check': 'top_wall',
@@ -42,8 +43,6 @@ def move_through_wormhole(lbr):
     next_wormhole = lbr.wormholes_cells[new_wormhole_idx]
     curr_row, curr_col = lbr.current_cell
     next_row, next_col = next_wormhole
-    print('wh list', lbr.wormholes_cells)
-    print('next wh idx', (next_row, next_col))
     lbr.current_cell = (next_row, next_col)
     lbr[curr_row][curr_col].is_current = False
     lbr[next_row][next_col].is_current = True
@@ -59,6 +58,8 @@ def move(lbr, direction):
     if wall is not None:
         msg = check_wall(lbr, wall)
         print(msg)
+        if msg == 'Step executed, exit. YOU WIN!':
+            sys.exit()
     else:
         row = current_cell.row
         col = current_cell.col

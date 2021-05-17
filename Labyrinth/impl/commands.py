@@ -2,7 +2,7 @@ import sys
 
 from services.command import IUserCommand
 from impl.objects import Labyrinth
-from impl.controller import move
+from impl.controller import move, move_through_wormhole
 
 class GoUp(IUserCommand):
     def get_command_tag(self):
@@ -60,6 +60,12 @@ class Skip(IUserCommand):
         return 0
 
     def __call__(self, lbr):
+        current_cell = lbr.get_current_cell()
+        current_wormhole_idx = current_cell.wormhole_idx
+        if current_wormhole_idx >=0:
+            lbr = move_through_wormhole(lbr)
+        else:
+            print('Step skipped')
         return lbr
 
 
