@@ -2,6 +2,7 @@ import sys
 
 from services.command import IUserCommand
 from impl.objects import Labyrinth
+from impl.controller import move
 
 class GoUp(IUserCommand):
     def get_command_tag(self):
@@ -11,17 +12,7 @@ class GoUp(IUserCommand):
         return 0
 
     def __call__(self, lbr): 
-        row, col = lbr.current_cell
-        wall = lbr[row][col].walls['top_wall']
-        print("Before", lbr.current_cell)
-        if wall is not None:
-            print(f"Step impossible, {wall}")
-            print("After", lbr.current_cell)
-        else:
-            lbr[row][col].is_current = False
-            lbr[row-1][col].is_current = True
-            lbr.current_cell = (row-1, col)
-            print("After", lbr.current_cell)
+        lbr = move(lbr, 'up')
         return lbr
 
 
@@ -33,17 +24,7 @@ class GoDown(IUserCommand):
         return 0
 
     def __call__(self, lbr):
-        row, col = lbr.current_cell
-        wall = lbr[row][col].walls['bottom_wall']
-        print("Before", lbr.current_cell)
-        if wall is not None:
-            print(f"Step impossible, {wall}")
-            print("After", lbr.current_cell)
-        else:
-            lbr[row][col].is_current = False
-            lbr[row+1][col].is_current = True
-            lbr.current_cell = (row+1, col)
-            print("After", lbr.current_cell)
+        lbr = move(lbr, 'down')
         return lbr
 
 
@@ -55,17 +36,7 @@ class GoLeft(IUserCommand):
         return 0
 
     def __call__(self, lbr):
-        row, col = lbr.current_cell
-        wall = lbr[row][col].walls['left_wall']
-        print("Before", lbr.current_cell)
-        if wall is not None:
-            print(f"Step impossible, {wall}")
-            print("After", lbr.current_cell)
-        else:
-            lbr[row][col].is_current = False
-            lbr[row][col-1].is_current = True
-            lbr.current_cell = (row, col-1)
-            print("After", lbr.current_cell)
+        lbr = move(lbr, 'left')
         return lbr
 
 
@@ -77,17 +48,7 @@ class GoRight(IUserCommand):
         return 0
 
     def __call__(self, lbr):
-        row, col = lbr.current_cell
-        wall = lbr[row][col].walls['right_wall']
-        print("Before", lbr.current_cell)
-        if wall is not None:
-            print(f"Step impossible, {wall}")
-            print("After", lbr.current_cell)
-        else:
-            lbr[row][col].is_current = False
-            lbr[row][col+1].is_current = True
-            lbr.current_cell = (row, col+1)
-            print("After", lbr.current_cell)
+        lbr = move(lbr, 'right')
         return lbr
 
 

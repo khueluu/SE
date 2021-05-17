@@ -47,7 +47,7 @@ def move_through_wormhole(lbr):
     lbr[new_row][next_col].is_current = True
     return lbr
 
-def move(lrb, direction):
+def move(lbr, direction):
     mapper = movement_mapper[direction]
     current_cell = lbr.get_current_cell()
     print('current_cell', current_cell.row, current_cell.col)
@@ -82,7 +82,7 @@ def move(lrb, direction):
             msg = 'Step executed, worm hole'
         if has_wormhole:
             lrb = move_through_wormhole(lbr)
-        print('check_collectables msg', msg)
+        print(msg)
     return lbr
 
 if __name__ == '__main__':
