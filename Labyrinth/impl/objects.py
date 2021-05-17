@@ -134,6 +134,10 @@ class Labyrinth(IObject):
             self.maze[row][col].wormhole = idx
         
         return wormholes_cells
+
+    def get_current_cell(self):
+        row, col = self.current_cell
+        return self.maze[row][col]
     
 if __name__ == "__main__":
     lbr = Labyrinth(size=4)
