@@ -2,7 +2,7 @@ import random
 from copy import deepcopy
 
 from services.object import IObject
-random.seed(0)
+#random.seed(0)
 
 class Cell(IObject):
     def __init__(self, row, col):
@@ -16,6 +16,7 @@ class Cell(IObject):
         }
         self.treasure = False
         self.wormhole = -1
+        self.is_current = False
 
     def __str__(self):
         return f"""
@@ -85,13 +86,13 @@ class Labyrinth(IObject):
 
     def match_walls_between_two_cells(self, row, col, wall):
         if wall == 'top_wall':
-            self.maze[row-1][col].walls['bottom_wall'] = 'normal_wall'
+            self.maze[row-1][col].walls['bottom_wall'] = 'wall'
         if wall == 'bottom_wall':
-            self.maze[row+1][col].walls['top_wall'] = 'normal_wall'
+            self.maze[row+1][col].walls['top_wall'] = 'wall'
         if wall == 'left_wall':
-            self.maze[row][col-1].walls['right_wall'] = 'normal_wall'
+            self.maze[row][col-1].walls['right_wall'] = 'wall'
         if wall == 'right_wall':
-            self.maze[row][col+1].walls['left_wall'] = 'normal_wall'
+            self.maze[row][col+1].walls['left_wall'] = 'wall'
         
 
     def set_walls(self):
@@ -103,12 +104,14 @@ class Labyrinth(IObject):
 
                 for wall, value in walls.items():
                     if (value is None) and (random.random() >= 0.5) and (available_walls_num > min_):
-                        self.maze[row][col].walls[wall] = 'normal_wall'
+                        self.maze[row][col].walls[wall] = 'wall'
                         self.match_walls_between_two_cells(row, col, wall)
                         available_walls_num -= 1
 
     def set_initial_cell(self):
-        return random.sample(range(self.size), k=2)
+        row, col = random.sample(range(self.size), k=2)
+        self.maze[row][col].is_current = True
+        return (row, col)
 
     def print_maze(self):
         for row in range(self.size):

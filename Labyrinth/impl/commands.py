@@ -11,7 +11,17 @@ class GoUp(IUserCommand):
         return 0
 
     def __call__(self, lbr): 
-        print(f'Go up from {lbr.current_cell}')
+        row, col = lbr.current_cell
+        current_cell = lbr[row][col]
+        wall = current_cell.walls['top_wall']
+        print(lbr.current_cell)
+        if wall is not None:
+            print(f"Step impossible, {wall}")
+            print(lbr.current_cell)
+        else:
+            lbr[row][col].is_current = False
+            lbr[row-1][col].is_current = True
+            print(lbr.current_cell)
 
 
 class GoDown(IUserCommand):
@@ -62,7 +72,7 @@ class Quit(IUserCommand):
         return 0
 
     def __call__(self, lbr):
-        sys.exit("Quit game without saving")
+        sys.exit('Quit game without saving')
     
 
 class Save(IUserCommand):
@@ -72,4 +82,6 @@ class Save(IUserCommand):
     def get_args_count(self):
         return 1
 
-    def __call__(self, lbr): pass
+    def __call__(self, lbr, output_file='labyrinth.txt'): 
+        print(f'Saved to {output_file} and quit')
+        sys.exit()
