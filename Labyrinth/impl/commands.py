@@ -22,6 +22,7 @@ class GoUp(IUserCommand):
             lbr[row-1][col].is_current = True
             lbr.current_cell = (row-1, col)
             print("After", lbr.current_cell)
+        return lbr
 
 
 class GoDown(IUserCommand):
@@ -43,6 +44,7 @@ class GoDown(IUserCommand):
             lbr[row+1][col].is_current = True
             lbr.current_cell = (row+1, col)
             print("After", lbr.current_cell)
+        return lbr
 
 
 class GoLeft(IUserCommand):
@@ -64,6 +66,7 @@ class GoLeft(IUserCommand):
             lbr[row][col-1].is_current = True
             lbr.current_cell = (row, col-1)
             print("After", lbr.current_cell)
+        return lbr
 
 
 class GoRight(IUserCommand):
@@ -85,6 +88,7 @@ class GoRight(IUserCommand):
             lbr[row][col+1].is_current = True
             lbr.current_cell = (row, col+1)
             print("After", lbr.current_cell)
+        return lbr
 
 
 class Skip(IUserCommand):
@@ -94,7 +98,8 @@ class Skip(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self, lbr): pass
+    def __call__(self, lbr):
+        return lbr
 
 
 class Quit(IUserCommand):
