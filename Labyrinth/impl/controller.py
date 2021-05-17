@@ -21,40 +21,44 @@ movement_mapper = {
     }
 }
 
-def check_exit(lbr):
-    if lbr.found_treasure:
-        return 'Step executed, exit. YOU WIN!'
-        sys.exit()
-    else:
-        return 'Step impossible, exit. You must find treasure before exitting'
+def check_wall(lbr, wall):
+    if wall == 'monolith':
+        return 'Step impossible, monolith'
+    if wall == 'wall':
+        return 'Step impossible, wall'
+    if wall == 'exit':
+        if lbr.found_treasure:
+            return 'Step executed, exit. YOU WIN!'
+        else:
+            return 'Step impossible, exit. You must find treasure before exitting'
+    return ''
 
-wall_check_mapper = {
-    'monolith': 'Step impossible, monolith',
-    'wall': 'Step impossible, wall',
-    'exit': 'Step executed, exit. YOU WIN!'
-}
 def move_through_wormhole(lbr):
     current_cell = lbr.get_current_cell()
     current_wormhole_idx = current_cell.wormhole_idx
     print('current wh idx', current_wormhole_idx)
-    next_wormhole = lbr.wormholes_cells[current_wormhole_idx+1]
+    new_wormhole_idx = current_wormhole_idx+1
+    new_wormhole_idx = new_wormhole_idx if new_wormhole_idx <=4 else 0
+    next_wormhole = lbr.wormholes_cells[new_wormhole_idx]
     curr_row, curr_col = lbr.current_cell
     next_row, next_col = next_wormhole
     print('wh list', lbr.wormholes_cells)
     print('next wh idx', (next_row, next_col))
     lbr.current_cell = (next_row, next_col)
     lbr[curr_row][curr_col].is_current = False
-    lbr[new_row][next_col].is_current = True
+    lbr[next_row][next_col].is_current = True
+    print('moved to', (next_row, next_col))
     return lbr
 
 def move(lbr, direction):
+    print(lbr)
     mapper = movement_mapper[direction]
     current_cell = lbr.get_current_cell()
     print('current_cell', current_cell.row, current_cell.col)
     wall = current_cell.walls[mapper['wall_to_check']]
     if wall is not None:
-        msg = wall_check_mapper[wall]
-        print('Wall not none msg', msg)
+        msg = check_wall(lbr, wall)
+        print(msg)
     else:
         row = current_cell.row
         col = current_cell.col
@@ -70,16 +74,20 @@ def move(lbr, direction):
         if has_treasure:
             lbr[new_row][new_col].treasure = False
             lbr.found_treasure = True
+        print('wh idx',lbr[new_row][new_col].wormhole_idx)
         has_wormhole = lbr[new_row][new_col].wormhole_idx >= 0
         msg = 'Step executed'
-        print('has tresure', has_treasure)
-        print('has wormhole', has_wormhole)
-        if has_treasure and has_wormhole:
+        has_both = has_treasure and has_wormhole
+        print('has_treasure', has_treasure)
+        print('has_wormhole', has_wormhole)
+        print('has_both', has_both)
+        if has_both:
             msg = 'Step executed, treasure and wormhole'
-        if has_treasure and (not has_wormhole):
+        elif has_treasure and (not has_wormhole):
             msg = 'Step executed, treasure'
-        if has_wormhole and (not has_treasure):
-            msg = 'Step executed, worm hole'
+        elif has_wormhole and (not has_treasure):
+            msg = 'Step executed, wormhole'
+        
         if has_wormhole:
             lrb = move_through_wormhole(lbr)
         print(msg)

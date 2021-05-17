@@ -2,7 +2,7 @@ import random
 from copy import deepcopy
 
 from services.object import IObject
-#random.seed(0)
+random.seed(0)
 
 class Cell(IObject):
     def __init__(self, row, col):
@@ -37,12 +37,20 @@ class Labyrinth(IObject):
         self.exit_cell = self.set_exit()
         self.treasure_cell = self.set_treasure()
         self.found_treasure = False
-        self.set_walls()
+        self.walls = self.set_walls()
         self.wormholes_cells = self.set_wormholes()
         self.current_cell = self.set_initial_cell()
         
     def __str__(self):
-        return f"<Labyrinth object of size ({self.size}x{self.size})>"
+        return f"""
+        <Labyrinth object of size ({self.size}x{self.size})>
+        'wormholes': {self.wormholes_cells}
+        'treasure': {self.treasure_cell}
+        'exit': {self.exit_cell}
+        'walls': {self.walls}
+        'current': {self.current_cell}
+        'found_treasure': {self.found_treasure}
+        """
 
     def __getitem__(self, idx):
         return self.maze[idx]
@@ -97,17 +105,20 @@ class Labyrinth(IObject):
         
 
     def set_walls(self):
-        min_ = 1
+        min_ = 2
+        wall_coords = []
         for row in range(0, self.size, 2):
             for col in range(self.size):
                 walls = self.maze[row][col].walls
                 available_walls_num = len([v for v in walls.values() if v is None])
 
                 for wall, value in walls.items():
-                    if (value is None) and (random.random() >= 0.5) and (available_walls_num > min_):
+                    if (value is None) and (random.random() >= 0.8) and (available_walls_num > min_):
                         self.maze[row][col].walls[wall] = 'wall'
+                        wall_coords.append((row, col, wall))
                         self.match_walls_between_two_cells(row, col, wall)
                         available_walls_num -= 1
+        return wall_coords
 
     def set_initial_cell(self):
         row, col = random.sample(range(self.size), k=2)
@@ -125,13 +136,14 @@ class Labyrinth(IObject):
 
     def set_wormholes(self):
         wormholes_cells = []
+
         while len(wormholes_cells) < 5:
             wh_cell = random.sample(range(self.size), k=2)
             if wh_cell not in wormholes_cells:
                 wormholes_cells.append(wh_cell)
 
         for idx, (row, col) in enumerate(wormholes_cells):
-            self.maze[row][col].wormhole = idx
+            self.maze[row][col].wormhole_idx = idx
         
         return wormholes_cells
 

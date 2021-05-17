@@ -16,7 +16,7 @@ def play(lbr):
     except KeyboardInterrupt:
         print("\nQuit game without saving")
 
-def size_validator(size):
+def validate(size):
     try:
         assert (int(size) >= 4) and (int(size) <= 10)
     except:
@@ -24,12 +24,12 @@ def size_validator(size):
         return False
     return True
 
-def create_labyrinth(validator):
+def create_labyrinth():
     finished = False
     try:
         while not(finished):
             size = input("$> Please select labyrinth size from 4 to 10: ")
-            is_valid = validator(size)
+            is_valid = validate(size)
             if is_valid:
                 lbr = Labyrinth(size=size)
                 print(f"Created labyrinth of size {lbr.size}x{lbr.size}")
@@ -42,7 +42,7 @@ def create_labyrinth(validator):
 
 def main():
     print("="*20, "Welcome to Labyrith", "="*20)
-    lbr = create_labyrinth(size_validator)
+    lbr = create_labyrinth()
     play(lbr)
 
 if __name__ == "__main__":
