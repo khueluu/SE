@@ -25,6 +25,7 @@ class Cell(IObject):
             'walls': {self.walls},
             'treasure': {self.treasure},
             'wormhole': {self.wormhole},
+            'is_current:' {self.is_current}
         """
         
 

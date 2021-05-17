@@ -12,16 +12,16 @@ class GoUp(IUserCommand):
 
     def __call__(self, lbr): 
         row, col = lbr.current_cell
-        current_cell = lbr[row][col]
-        wall = current_cell.walls['top_wall']
-        print(lbr.current_cell)
+        wall = lbr[row][col].walls['top_wall']
+        print("Before", lbr.current_cell)
         if wall is not None:
             print(f"Step impossible, {wall}")
-            print(lbr.current_cell)
+            print("After", lbr.current_cell)
         else:
             lbr[row][col].is_current = False
             lbr[row-1][col].is_current = True
-            print(lbr.current_cell)
+            lbr.current_cell = (row-1, col)
+            print("After", lbr.current_cell)
 
 
 class GoDown(IUserCommand):
@@ -31,7 +31,18 @@ class GoDown(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self, lbr): pass
+    def __call__(self, lbr):
+        row, col = lbr.current_cell
+        wall = lbr[row][col].walls['bottom_wall']
+        print("Before", lbr.current_cell)
+        if wall is not None:
+            print(f"Step impossible, {wall}")
+            print("After", lbr.current_cell)
+        else:
+            lbr[row][col].is_current = False
+            lbr[row+1][col].is_current = True
+            lbr.current_cell = (row+1, col)
+            print("After", lbr.current_cell)
 
 
 class GoLeft(IUserCommand):
@@ -41,7 +52,18 @@ class GoLeft(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self, lbr): pass
+    def __call__(self, lbr):
+        row, col = lbr.current_cell
+        wall = lbr[row][col].walls['left_wall']
+        print("Before", lbr.current_cell)
+        if wall is not None:
+            print(f"Step impossible, {wall}")
+            print("After", lbr.current_cell)
+        else:
+            lbr[row][col].is_current = False
+            lbr[row][col-1].is_current = True
+            lbr.current_cell = (row, col-1)
+            print("After", lbr.current_cell)
 
 
 class GoRight(IUserCommand):
@@ -51,7 +73,18 @@ class GoRight(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self, lbr): pass
+    def __call__(self, lbr):
+        row, col = lbr.current_cell
+        wall = lbr[row][col].walls['right_wall']
+        print("Before", lbr.current_cell)
+        if wall is not None:
+            print(f"Step impossible, {wall}")
+            print("After", lbr.current_cell)
+        else:
+            lbr[row][col].is_current = False
+            lbr[row][col+1].is_current = True
+            lbr.current_cell = (row, col+1)
+            print("After", lbr.current_cell)
 
 
 class Skip(IUserCommand):
