@@ -14,8 +14,7 @@ class Cell(IObject):
             "right_wall": None
         }
         self.treasure = False
-        self.wormhole = False
-        self.wormhole_idx = None
+        self.wormhole = -1
 
     def __str__(self):
         return f"""
@@ -24,7 +23,6 @@ class Cell(IObject):
             'walls': {self.walls},
             'treasure': {self.treasure},
             'wormhole': {self.wormhole},
-            'wormhole_idx': {self.wormhole_idx}
         """
         
 
@@ -128,8 +126,7 @@ class Labyrinth(IObject):
                 wormholes_cells.append(wh_cell)
 
         for idx, (row, col) in enumerate(wormholes_cells):
-            self.maze[row][col].wormhole = True
-            self.maze[row][col].wormhole_idx = idx
+            self.maze[row][col].wormhole = idx
         
         return wormholes_cells
     
