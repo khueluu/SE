@@ -1,4 +1,5 @@
 import random
+import json
 from copy import deepcopy
 
 from services.object import IObject
@@ -32,11 +33,12 @@ class Cell(IObject):
 class Labyrinth(IObject):
     def __init__(self, size):
         self.size = int(size)
+        self.found_treasure = False
+        
         self.maze = self.create_maze(self.size)
         self.monoliths = self.set_monolith()
         self.exit_cell = self.set_exit()
         self.treasure_cell = self.set_treasure()
-        self.found_treasure = False
         self.walls = self.set_walls()
         self.wormholes_cells = self.set_wormholes()
         self.current_cell = self.set_initial_cell()
@@ -150,9 +152,19 @@ class Labyrinth(IObject):
     def get_current_cell(self):
         row, col = self.current_cell
         return self.maze[row][col]
-    
-if __name__ == "__main__":
-    lbr = Labyrinth(size=4)
-    for row, col in lbr.wormholes_cells:
-        print(lbr[row][col])
+
+    def save(self, output_file='labyrinth.txt'):
+        state_dict = {
+            'size': self.size,
+            'wormhole_cells': self.wormholes_cells,
+            'treasure_cell': self.treasure_cell,
+            'exit_cell': self.exit_cell,
+            'walls': self.walls,
+            'current_cell': self.current_cell,
+            'found_treasure': self.found_treasure
+        }
+
+        with open(output_file, 'w') as file:
+            file.write(json.dumps(state_dict))
+
 

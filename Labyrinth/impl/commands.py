@@ -88,5 +88,6 @@ class Save(IUserCommand):
         return 1
 
     def __call__(self, lbr, output_file='labyrinth.txt'): 
+        lbr.save(output_file)
         print(f'Saved to {output_file} and quit')
         sys.exit()
