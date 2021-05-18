@@ -8,4 +8,5 @@ supported_commands = {
     "skip": Skip(),
     "quit": Quit(),
     "save": Save(),
+    "load": Load()
 }

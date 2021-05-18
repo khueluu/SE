@@ -31,7 +31,8 @@ def create_labyrinth():
             size = input("$> Please select labyrinth size from 4 to 10: ")
             is_valid = validate(size)
             if is_valid:
-                lbr = Labyrinth(size=size)
+                lbr = Labyrinth()
+                lbr.create_new(size=size)
                 print(f"Created labyrinth of size {lbr.size}x{lbr.size}")
                 finished = True
                 return lbr
@@ -46,7 +47,6 @@ def main():
     play(lbr)
 
 if __name__ == "__main__":
-    
     main()
 
     

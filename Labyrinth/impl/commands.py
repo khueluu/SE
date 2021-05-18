@@ -91,3 +91,20 @@ class Save(IUserCommand):
         lbr.save(output_file)
         print(f'Saved to {output_file} and quit')
         sys.exit()
+
+
+class Load(IUserCommand):
+    def get_command_tag(self):
+        return 'load'
+
+    def get_args_count(self):
+        return 1
+
+    def __call__(self, lbr, input_file):
+        print('Before load')
+        print(lbr)
+        print('')
+        lbr.load(input_file)
+        print('After load')
+        print(lbr)
+        return lbr

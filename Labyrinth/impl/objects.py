@@ -31,10 +31,9 @@ class Cell(IObject):
         
 
 class Labyrinth(IObject):
-    def __init__(self, size):
+    def create_new(self, size):
         self.size = int(size)
         self.found_treasure = False
-        
         self.maze = self.create_maze(self.size)
         self.monoliths = self.set_monolith()
         self.exit_cell = self.set_exit()
@@ -42,6 +41,21 @@ class Labyrinth(IObject):
         self.walls = self.set_walls()
         self.wormholes_cells = self.set_wormholes()
         self.current_cell = self.set_initial_cell()
+
+
+    def load(self, input_file):
+        with open(input_file, 'r') as f:
+            state_dict = json.load(f)
+
+        self.size = state_dict['size']
+        self.maze = self.create_maze(self.size)
+        self.monoliths = self.set_monolith()
+        self.wormholes_cells = state_dict['wormhole_cells']
+        self.treasure_cell = state_dict['treasure_cell']
+        self.exit_cell = state_dict['exit_cell']
+        self.walls = state_dict['walls']
+        self.current_cell = state_dict['current_cell']
+        self.found_treasure = state_dict['found_treasure']
         
     def __str__(self):
         return f"""
@@ -164,7 +178,7 @@ class Labyrinth(IObject):
             'found_treasure': self.found_treasure
         }
 
-        with open(output_file, 'w') as file:
-            file.write(json.dumps(state_dict))
+        with open(output_file, 'w') as f:
+            f.write(json.dumps(state_dict))
 
 
