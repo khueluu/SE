@@ -57,11 +57,28 @@ def load_labyrinth():
         print("\nQuit game without saving")
         sys.exit()
     
+def welcome():
+    print("="*20, "Welcome to Labyrith", "="*20)
+    finished = False
+    try:
+        while not(finished):
+            cmd = input("$> To create new game, type 'create'. To load a game, type 'load': ")
+            cmd = cmd.strip().lower()
+            assertion = cmd in ['create', 'load']
+            error_message = "Please only type 'create' or 'load' without any arguments"
+            is_valid = validate(assertion, error_message)
+            if is_valid:
+                return cmd
+    except KeyboardInterrupt:
+        print("\nQuit game without saving")
+        sys.exit()
 
 def main():
-    print("="*20, "Welcome to Labyrith", "="*20)
-    #lbr = create_labyrinth()
-    lbr = load_labyrinth()
+    cmd = welcome()
+    if cmd == 'create':
+        lbr = create_labyrinth()
+    elif cmd == 'load':
+        lbr = load_labyrinth()
     play(lbr)
 
 if __name__ == "__main__":
