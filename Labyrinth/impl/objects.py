@@ -141,14 +141,6 @@ class Labyrinth(IObject):
         self.maze[row][col].is_current = True
         return (row, col)
 
-    def print_maze(self):
-        for row in range(self.size):
-            for col in range(self.size):
-                print({
-                    'cell': (row, col),
-                    'tresure_cell': self.treasure_cell,
-                    'walls': self.maze[row][col].walls
-                })
 
     def set_wormholes(self):
         wormholes_cells = []

@@ -51,7 +51,7 @@ def move_through_wormhole(lbr):
     return lbr
 
 def move(lbr, direction):
-    print(lbr)
+    #print(lbr)
     mapper = movement_mapper[direction]
     current_cell = lbr.get_current_cell()
     # print('current_cell', current_cell.row, current_cell.col)

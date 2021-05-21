@@ -101,10 +101,5 @@ class Load(IUserCommand):
         return 1
 
     def __call__(self, lbr, input_file):
-        # print('Before load')
-        # print(lbr)
-        # print('')
         lbr.load(input_file)
-        # print('After load')
-        # print(lbr)
         return lbr
