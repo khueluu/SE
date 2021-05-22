@@ -1,7 +1,9 @@
 import sys
 import random
 import os
-from impl.commands import *
+
+from impl.labyrinth import Labyrinth, LabyrinthGenerator
+from impl.validator import Validator
 from utils import *
 
 def play(lbr):
@@ -25,6 +27,26 @@ def validate_size(size):
         return False
     return True
 
+def generate_labyrinth(size, wall_rate=0.5, sequence_length=5):
+    validator = Validator()
+    finished = False
+    count = 0
+    while not finished:
+        count += 1
+
+        lbr = Labyrinth()
+        lbr_gen = LabyrinthGenerator(
+            size=size,
+            wall_rate=wall_rate,
+            sequence_length=sequence_length)
+        lbr.create(size=size, generator=lbr_gen)
+
+        is_valid_labyrinth = validator.validate(lbr)
+        if is_valid_labyrinth:
+            finished = True
+    print(f'Created labyrinth of size {lbr.size}x{lbr.size} after {count} generation(s).')
+    return lbr
+
 def create_labyrinth():
     finished = False
     try:
@@ -32,9 +54,8 @@ def create_labyrinth():
             size = input("$> Please select labyrinth size from 4 to 10: ")
             is_valid = validate_size(size)
             if is_valid:
-                lbr = Labyrinth()
-                lbr.create_new(size=size)
-                print(f"Created labyrinth of size {lbr.size}x{lbr.size}")
+                size = int(size)
+                lbr = generate_labyrinth(size=size, wall_rate=0.5, sequence_length=5)
                 finished = True
                 return lbr
     except KeyboardInterrupt:
@@ -50,9 +71,17 @@ def load_labyrinth():
             if is_valid:
                 lbr = Labyrinth()
                 lbr.load(input_file=input_file)
-                print(f"Loaded labyrinth of size {lbr.size}x{lbr.size}")
-                finished = True
-                return lbr
+
+                validator = Validator()
+                is_valid_labyrinth = validator.validate(lbr)
+
+                if is_valid_labyrinth:
+                    print(f"Loaded labyrinth of size {lbr.size}x{lbr.size}")
+                    finished = True
+                    return lbr
+                else:
+                    print('Invalid labyrinth')
+                
     except KeyboardInterrupt:
         print("\nQuit game without saving")
         sys.exit()

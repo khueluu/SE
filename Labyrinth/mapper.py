@@ -1,16 +1,3 @@
-from impl.commands import *
-
-supported_commands = {
-    "up": GoUp(),
-    "down": GoDown(),
-    "left": GoLeft(),
-    "right": GoRight(),
-    "skip": Skip(),
-    "quit": Quit(),
-    "save": Save(),
-    "load": Load()
-}
-
 movement_mapper = {
     'up': {
         'wall_to_check': 'top',
@@ -48,5 +35,9 @@ messages = {
         'treasure': 'Step executed, treasure.',
         'wormhole': 'Step executed, wormhole.',
         'normal': 'Step executed.',
+    },
+    'skip': {
+        'wormhole': 'Skip, move to next wormhole.',
+        'normal': 'Skip.'
     }
 }

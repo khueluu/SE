@@ -1,8 +1,9 @@
 import sys
+from copy import deepcopy
 
 from services.command import IUserCommand
-from impl.objects import Labyrinth
-from impl.controller import move, move_through_wormhole
+from services.labyrinth import ILabyrinth
+from impl.controller import Controller
 
 class GoUp(IUserCommand):
     def get_command_tag(self):
@@ -11,9 +12,10 @@ class GoUp(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self, lbr): 
-        lbr = move(lbr, 'up')
-        return lbr
+    def __call__(self, lbr: ILabyrinth):
+        controller = Controller(lbr)
+        controller.move(self.get_command_tag())
+        return deepcopy(controller.lbr)
 
 
 class GoDown(IUserCommand):
@@ -23,9 +25,10 @@ class GoDown(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self, lbr):
-        lbr = move(lbr, 'down')
-        return lbr
+    def __call__(self, lbr: ILabyrinth):
+        controller = Controller(lbr)
+        controller.move(self.get_command_tag())
+        return deepcopy(controller.lbr)
 
 
 class GoLeft(IUserCommand):
@@ -35,9 +38,10 @@ class GoLeft(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self, lbr):
-        lbr = move(lbr, 'left')
-        return lbr
+    def __call__(self, lbr: ILabyrinth):
+        controller = Controller(lbr)
+        controller.move(self.get_command_tag())
+        return deepcopy(controller.lbr)
 
 
 class GoRight(IUserCommand):
@@ -47,9 +51,10 @@ class GoRight(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self, lbr):
-        lbr = move(lbr, 'right')
-        return lbr
+    def __call__(self, lbr: ILabyrinth):
+        controller = Controller(lbr)
+        controller.move(self.get_command_tag())
+        return deepcopy(controller.lbr)
 
 
 class Skip(IUserCommand):
@@ -59,14 +64,10 @@ class Skip(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self, lbr):
-        current_cell = lbr.get_current_cell()
-        current_wormhole_idx = current_cell.wormhole_idx
-        if current_wormhole_idx >=0:
-            lbr = move_through_wormhole(lbr)
-        else:
-            print('Step skipped')
-        return lbr
+    def __call__(self, lbr: ILabyrinth):
+        controller = Controller(lbr)
+        controller.skip()
+        return deepcopy(controller.lbr)
 
 
 class Quit(IUserCommand):
@@ -76,7 +77,7 @@ class Quit(IUserCommand):
     def get_args_count(self):
         return 0
 
-    def __call__(self, lbr):
+    def __call__(self, lbr: ILabyrinth):
         sys.exit('Quit game without saving')
     
 
@@ -87,7 +88,7 @@ class Save(IUserCommand):
     def get_args_count(self):
         return 1
 
-    def __call__(self, lbr, output_file='labyrinth.txt'): 
+    def __call__(self, lbr: ILabyrinth, output_file='labyrinth.txt'): 
         lbr.save(output_file)
         print(f'Saved to {output_file} and quit')
         sys.exit()
@@ -100,6 +101,6 @@ class Load(IUserCommand):
     def get_args_count(self):
         return 1
 
-    def __call__(self, lbr, input_file):
+    def __call__(self, lbr: ILabyrinth, input_file: str):
         lbr.load(input_file)
         return lbr

@@ -3,7 +3,9 @@ import json
 from copy import deepcopy
 
 from services.labyrinth import ILabyrinth, ILabyrinthGenerator
-from utils import is_between, get_matching_wall
+from utils import *
+
+random.seed(0)
 
 class Labyrinth(ILabyrinth):
     def __init__(self):
