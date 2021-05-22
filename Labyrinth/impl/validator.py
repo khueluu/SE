@@ -34,6 +34,8 @@ class Validator(IValidator):
             (row, col), wall_position = wall
             if (not is_between(row, 0, N)) or (not is_between(col, 0, N)):
                 return False
+        duplicated = get_duplicate(walls)
+        if duplicated: return False
         return True
 
     def validate_wormholes(self, labyrinth):
