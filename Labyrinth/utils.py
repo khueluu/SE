@@ -53,3 +53,10 @@ def get_matching_wall(row, col, wall_type):
             return ((row, col-1), 'right')
         if wall_type == 'right':
             return((row, col+1), 'left')
+
+def is_same_cell(cell_1, cell_2):
+    return (cell_1[0] == cell_2[0]) and (cell_1[1] == cell_2[1])
+
+def get_next_idx_of_seq(idx, seq_length):
+    next_idx = idx + 1
+    return next_idx if next_idx < seq_length else 0

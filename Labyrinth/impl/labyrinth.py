@@ -72,7 +72,11 @@ class Labyrinth(ILabyrinth):
         return deepcopy(maze)
 
     def get_current(self):
-        return self.current
+        row, col = self.current
+        return self.maze[row][col]
+
+    def set_current(self, row, col):
+        self.current = (row, col)
 
     def save(self, output_file='labyrinth.txt'):
         state_dict = {
