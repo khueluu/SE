@@ -16,6 +16,7 @@ def play(lbr):
                 lbr = cmd(lbr, *args)
             elif cmd:
                 lbr = cmd(lbr)
+                print(lbr)
     except KeyboardInterrupt:
         print("\nQuit game without saving")
 
@@ -71,17 +72,9 @@ def load_labyrinth():
             if is_valid:
                 lbr = Labyrinth()
                 lbr.load(input_file=input_file)
-
-                validator = Validator()
-                is_valid_labyrinth = validator.validate(lbr)
-
-                if is_valid_labyrinth:
-                    print(f"Loaded labyrinth of size {lbr.size}x{lbr.size}")
-                    finished = True
-                    return lbr
-                else:
-                    print('Invalid labyrinth')
-                
+                print(f"Loaded labyrinth of size {lbr.size}x{lbr.size}")
+                finished = True
+                return lbr
     except KeyboardInterrupt:
         print("\nQuit game without saving")
         sys.exit()

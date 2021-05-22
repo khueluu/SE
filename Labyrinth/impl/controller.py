@@ -23,22 +23,16 @@ class Controller(IController):
             msg = messages['step_impossible'][wall_type]
         return msg
 
-    def get_msg_for_possible_step(self, is_treasure, is_wormhole):
-        msg = ''
-        if is_treasure and is_wormhole:
-            msg = messages['step_possible']['treasure_and_wormhole']
-        elif is_treasure:
-            msg = messages['step_possible']['treasure']
-        elif is_wormhole:
-            msg = messages['step_possible']['wormhole']
-        else:
-            msg = messages['step_possible']['normal']
-        return msg
-
     def is_treasure(self, cell):
         if not self.lbr.treasure:
             return False
         return is_same_cell(cell, self.lbr.treasure)
+    
+    def check_treasure(self, cell):
+        if self.is_treasure(cell):
+            print('Treasure!')
+            self.lbr.found_treasure = True
+            self.lbr.treasure = None
 
     def is_wormhole(self, cell):
         for wormhole in self.lbr.wormholes:
@@ -55,6 +49,13 @@ class Controller(IController):
         wormholes_len = len(self.lbr.wormholes)
         next_idx = get_next_idx_of_seq(current_idx, wormholes_len)
         return self.lbr.wormholes[next_idx]
+
+    def move_through_wormhole(self, cell):
+        wormhole_idx = self.get_wormhole_idx(cell)
+        next_wormhole = self.get_next_wormhole(wormhole_idx)
+        print('Moved to next wormhole.')
+        self.lbr.set_current(next_wormhole[0], next_wormhole[1])
+        self.check_treasure(next_wormhole)
 
     def move(self, direction: str):
         current = self.lbr.get_current()
@@ -76,29 +77,17 @@ class Controller(IController):
 
             # Check collectables of new cell
             new_cell = (new_row, new_col)
-            is_treasure = self.is_treasure(new_cell)
-            is_wormhole = self.is_wormhole(new_cell)
-            
-            msg = self.get_msg_for_possible_step(is_treasure, is_wormhole)
-            print(msg)
+            self.check_treasure(new_cell)
 
-            if is_treasure:
-                self.lbr.found_treasure = True
-                self.lbr.treasure = None
-            if is_wormhole:
+            if self.is_wormhole(new_cell):
+                print(messages['step_possible']['wormhole'])
                 self.move_through_wormhole(new_cell)
-
-    def move_through_wormhole(self, cell):
-        wormhole_idx = self.get_wormhole_idx(cell)
-        next_wormhole = self.get_next_wormhole(wormhole_idx)
-        self.lbr.set_current(next_wormhole[0], next_wormhole[1])
+            else:
+                print(messages['step_possible']['normal'])
 
     def skip(self):
         current_cell = self.lbr.current
+        print(messages['skip']['normal'])
         if self.is_wormhole(current_cell):
-            msg = messages['skip']['wormhole']
             self.move_through_wormhole(current_cell)
-        else:
-            msg = messages['skip']['normal']
-        print(msg)
             

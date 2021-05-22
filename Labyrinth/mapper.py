@@ -31,12 +31,11 @@ messages = {
         }
     },
     'step_possible': {
-        'treasure_and_wormhole': 'Step executed, treasure and wormhole.',
-        'treasure': 'Step executed, treasure.',
         'wormhole': 'Step executed, wormhole.',
         'normal': 'Step executed.',
     },
     'skip': {
+        'treasure_and_wormhole': 'Skip, move to next wormhole and found treasure!',
         'wormhole': 'Skip, move to next wormhole.',
         'normal': 'Skip.'
     }
