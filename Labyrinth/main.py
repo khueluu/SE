@@ -16,7 +16,6 @@ def play(lbr):
                 lbr = cmd(lbr, *args)
             elif cmd:
                 lbr = cmd(lbr)
-                print(lbr)
     except KeyboardInterrupt:
         print("\nQuit game without saving")
 
@@ -68,7 +67,7 @@ def load_labyrinth():
     try:
         while not(finished):
             input_file = input("$> Please type file path to load labyrinth: ")
-            is_valid = validate(os.path.isfile(input_file),"File not found")
+            is_valid = validate(os.path.isfile(input_file), "File not found")
             if is_valid:
                 lbr = Labyrinth()
                 lbr.load(input_file=input_file)

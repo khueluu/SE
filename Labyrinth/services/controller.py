@@ -5,4 +5,7 @@ class IController(metaclass=ABCMeta):
     @abstractmethod
     def move(self, direction: str): pass
 
+    @abstractmethod
+    def skip(self): pass
+
     

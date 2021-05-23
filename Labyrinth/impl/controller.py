@@ -14,15 +14,42 @@ class Controller(IController):
     def __init__(self, labyrinth):
         self.lbr = labyrinth
 
-    def get_msg_for_impossible_step(self, wall_type):
-        msg = ''
-        if wall_type == 'exit':
-            exit_messages = messages['step_impossible']['exit']
-            msg = exit_messages['found_treasure'] if self.lbr.found_treasure else exit_messages['not_found_treasure']
-        else:
-            msg = messages['step_impossible'][wall_type]
-        return msg
 
+    # Helpers
+    def check_exit(self):
+        if self.lbr.found_treasure:
+            print(messages['win'])
+            sys.exit()
+    
+    def get_directing_wall(self, cell, direction):
+        mapper = movement_mapper[direction]
+        wall_type = mapper['wall_to_check']
+        row, col = cell
+        current = self.lbr[row][col]
+        return current['walls'][wall_type]
+    
+    def do_step_impossible(self, wall_type):
+        if wall_type == 'exit':
+            self.check_exit()
+        print(messages['step_impossible'][wall_type])
+
+    def move_cell(self, cell, direction):
+        mapper = movement_mapper[direction]
+        row, col = cell
+        new_row = row + mapper['row_change']
+        new_col = col + mapper['col_change']
+        self.lbr.set_current(new_row, new_col)
+        print(messages['step_possible'])
+        new_cell = (new_row, new_col)
+        return new_cell
+
+    def do_step_possible(self, cell, direction):
+        new_cell = self.move_cell(cell, direction)
+        self.check_treasure(new_cell)
+        self.check_wormhole(new_cell)
+
+
+    # Treasure
     def is_treasure(self, cell):
         if not self.lbr.treasure:
             return False
@@ -30,10 +57,12 @@ class Controller(IController):
     
     def check_treasure(self, cell):
         if self.is_treasure(cell):
-            print('Treasure!')
+            print(messages['objects']['treasure'])
             self.lbr.found_treasure = True
             self.lbr.treasure = None
 
+
+    # Wormhole
     def is_wormhole(self, cell):
         for wormhole in self.lbr.wormholes:
             if is_same_cell(cell, wormhole):
@@ -53,41 +82,32 @@ class Controller(IController):
     def move_through_wormhole(self, cell):
         wormhole_idx = self.get_wormhole_idx(cell)
         next_wormhole = self.get_next_wormhole(wormhole_idx)
-        print('Moved to next wormhole.')
+        
         self.lbr.set_current(next_wormhole[0], next_wormhole[1])
+        print(messages['objects']['wormhole_next'])
+
         self.check_treasure(next_wormhole)
 
+    def check_wormhole(self, cell, verbose=True):
+        if self.is_wormhole(cell):
+            if verbose:
+                print(messages['objects']['wormhole'])
+            self.move_through_wormhole(cell)
+
+
+    # Actions
     def move(self, direction: str):
-        current = self.lbr.get_current()
         mapper = movement_mapper[direction]
-        wall_type = mapper['wall_to_check']
-        checking_wall = current['walls'][wall_type]
+        current_cell = self.lbr.current
+        directing_wall = self.get_directing_wall(current_cell, direction)
 
-        if checking_wall is not None:
-            msg = self.get_msg_for_impossible_step(checking_wall)
-            print(msg)
-            if msg == 'Step executed, exit. YOU WIN!':
-                sys.exit()
+        if directing_wall:
+            self.do_step_impossible(directing_wall)
         else:
-            # Move current cell to new cell
-            row, col = current['position']
-            new_row = row + mapper['row_change']
-            new_col = col + mapper['col_change']
-            self.lbr.set_current(new_row, new_col)
-
-            # Check collectables of new cell
-            new_cell = (new_row, new_col)
-            self.check_treasure(new_cell)
-
-            if self.is_wormhole(new_cell):
-                print(messages['step_possible']['wormhole'])
-                self.move_through_wormhole(new_cell)
-            else:
-                print(messages['step_possible']['normal'])
+            self.do_step_possible(current_cell, direction)
 
     def skip(self):
         current_cell = self.lbr.current
-        print(messages['skip']['normal'])
-        if self.is_wormhole(current_cell):
-            self.move_through_wormhole(current_cell)
+        print(messages['skip'])
+        self.check_wormhole(current_cell, verbose=False)
             

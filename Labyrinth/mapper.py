@@ -25,18 +25,14 @@ messages = {
     'step_impossible':{
         'monolith': 'Step impossible, monolith.',
         'wall': 'Step impossible, wall.',
-        'exit': {
-            'found_treasure':'Step executed, exit. YOU WIN!',
-            'not_found_treasure': 'Step impossible, exit. You must find treasure before exitting.'
-        }
+        'exit': 'Step impossible, exit. You must find treasure before exitting.'
     },
-    'step_possible': {
-        'wormhole': 'Step executed, wormhole.',
-        'normal': 'Step executed.',
-    },
-    'skip': {
-        'treasure_and_wormhole': 'Skip, move to next wormhole and found treasure!',
-        'wormhole': 'Skip, move to next wormhole.',
-        'normal': 'Skip.'
+    'step_possible': 'Step executed.',
+    'skip':  'Skip.',
+    'win': 'Step executed, exit. YOU WIN!',
+    'objects': {
+        'treasure': 'TREASURE!',
+        'wormhole': 'WORMHOLE!',
+        'wormhole_next': 'Moved to next wormhole.'
     }
 }
