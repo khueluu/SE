@@ -8,7 +8,8 @@ class Validator(IValidator):
         valid_walls = self.validate_walls(labyrinth)
         valid_wormholes = self.validate_wormholes(labyrinth)
         valid_monolith = self.validate_monolith(labyrinth)
-        return (valid_cells and valid_walls and valid_wormholes and valid_monolith)
+        valid_exit = self.validate_exit(labyrinth)
+        return (valid_cells and valid_walls and valid_wormholes and valid_monolith and valid_exit)
 
     def validate_cells(self, labyrinth: ILabyrinth):
         N = labyrinth.size
@@ -59,5 +60,19 @@ class Validator(IValidator):
                     return False
         return True
 
+    def validate_exit(self, labyrinth):
+        if not labyrinth.exit:
+            return False
+
+        exit_count = 0
+        N = labyrinth.size
+        for row in range(N):
+            for col in range(N):
+                cell = labyrinth[row][col]
+                walls = cell['walls'].values()
+                if 'exit' in walls:
+                    exit_count += 1
+        return exit_count == 1
+        
 
 

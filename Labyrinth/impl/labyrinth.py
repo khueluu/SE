@@ -58,6 +58,7 @@ class Labyrinth(ILabyrinth):
     def set_exit_to_maze(self):
         (row, col), wall_type = random.choice(self.get_monoliths())
         self.maze[row][col]['walls'][wall_type] = 'exit'
+        return (row, col)
 
     def create_maze(self, size):
         maze = []
@@ -166,8 +167,10 @@ class LabyrinthGenerator(ILabyrinthGenerator):
             (row, col), wall_type = random_wall
             matching_wall = get_matching_wall(row, col, wall_type)
             (new_row, new_col), new_wall_type = matching_wall
+
             if is_between(new_row, 0, self.size-1) and is_between(new_col, 0, self.size-1):
                 random_walls.append(matching_wall)
+
         random_walls = list(set(random_walls))
         return random_walls
 
