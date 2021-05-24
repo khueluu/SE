@@ -20,6 +20,12 @@ class Cell(ICell):
 
     def set_wall(self, wall_name: str, wall_type: str):
         self.__walls[wall_name] = wall_type
+    
+    def get_dict(self):
+        return {
+            'position': self.get_position(),
+            'walls': self.get_walls()
+        }
 
 
 class Labyrinth(ILabyrinth):
@@ -85,13 +91,9 @@ class Labyrinth(ILabyrinth):
     def set_current(self, row, col):
         self.__current = (row, col)
 
-    def get_current_cell(self):
-        row, col = self.__current
-        return self.__maze[row][col]
-
     def get_found_treasure(self):
         return self.__found_treasure
-        
+
     def set_found_treasure(self):
         self.__found_treasure = True
         self.__treasure = None
@@ -135,10 +137,20 @@ class Labyrinth(ILabyrinth):
                         monoliths.append(monolith)
         return deepcopy(monoliths)
 
+    def get_maze(self):
+        maze = []
+        for row in self.__maze:
+            maze_row = []
+            for cell in row:
+                cell_dict = cell.get_dict()
+                maze_row.append(cell_dict)
+            maze.append(maze_row)
+        return deepcopy(maze)
+
     def save(self, output_file='labyrinth.txt'):
         state_dict = {
             'size': self.__size,
-            'maze': self.__maze,
+            'maze': self.get_maze(),
             'wormholes': self.__wormholes,
             'treasure': self.__treasure,
             'exit': self.__exit,
@@ -150,14 +162,25 @@ class Labyrinth(ILabyrinth):
         with open(output_file, 'w') as f:
             f.write(json.dumps(state_dict))
 
+    def load_maze(self, maze):
+        loaded_maze = []
+        for maze_row in maze:
+            loaded_row = []
+            for cell in maze_row:
+                row, col = cell['position']
+                walls = cell['walls']
+                loaded_row.append(Cell(row, col, walls))
+            loaded_maze.append(loaded_row)
+        return deepcopy(loaded_maze)
+
     def load(self, input_file):
         with open(input_file, 'r') as f:
             data = json.load(f)
         state_dict = deepcopy(data)
 
         self.__size = state_dict['size']
-        self.__maze = state_dict['maze']
-        self.__wormholes= state_dict['wormholes']
+        self.__maze = self.load_maze(state_dict['maze'])
+        self.__wormholes = state_dict['wormholes']
         self.__treasure = state_dict['treasure']
         self.__exit = state_dict['exit']
         self.__walls = state_dict['walls']

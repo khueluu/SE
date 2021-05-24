@@ -10,15 +10,15 @@ class ICell(metaclass=ABCMeta):
     @abstractmethod
     def set_wall(self, wall_name: str, wall_type: str): pass
 
+    @abstractmethod
+    def get_dict(self): pass
+
 class ILabyrinth(metaclass=ABCMeta):
     @abstractmethod
     def create(self, size: int): pass
 
     @abstractmethod
     def __getitem__(self, idx: int): pass
-
-    @abstractmethod
-    def get_current_cell(self): pass
 
     @abstractmethod
     def get_current(self): pass
