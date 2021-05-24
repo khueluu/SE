@@ -12,7 +12,7 @@ class Validator(IValidator):
         return (valid_cells and valid_walls and valid_wormholes and valid_monolith and valid_exit)
 
     def validate_cells(self, labyrinth: ILabyrinth):
-        N = labyrinth.size
+        N = labyrinth.get_size()
         for row in range(N):
             for col in range(N):
                 valid_cell = self.validate_one_cell(labyrinth[row][col])
@@ -22,15 +22,15 @@ class Validator(IValidator):
     
     def validate_one_cell(self, cell):
         num_wall = 0
-        walls = cell['walls']
-        for key, value in walls.items():
-            if value is not None:
+        cell_wall_list = cell.get_walls().values()
+        for wall in cell_wall_list:
+            if wall is not None:
                 num_wall += 1
         return num_wall < 4
 
     def validate_walls(self, labyrinth: ILabyrinth):
-        walls = labyrinth.walls
-        N = labyrinth.size
+        walls = labyrinth.get_walls()
+        N = labyrinth.get_size()
         for wall in walls:
             (row, col), wall_position = wall
             if (not is_between(row, 0, N)) or (not is_between(col, 0, N)):
@@ -40,37 +40,37 @@ class Validator(IValidator):
         return True
 
     def validate_wormholes(self, labyrinth):
-        wormholes = labyrinth.wormholes
+        wormholes = labyrinth.get_wormholes()
         duplicated = get_duplicate(wormholes)
         return (not duplicated)
 
     def validate_monolith(self, labyrinth):
-        N = labyrinth.size
+        N = labyrinth.get_size()
         for row in range(N):
             for col in range(N):
                 cell = labyrinth[row][col]
-                walls = cell['walls']
-                if (row == 0) and (walls['top'] not in ['monolith', 'exit']):
+                cell_wall_dict = cell.get_walls()
+                if (row == 0) and (cell_wall_dict['top'] not in ['monolith', 'exit']):
                     return False
-                if (row == N-1) and (walls['bottom'] not in ['monolith', 'exit']):
+                if (row == N-1) and (cell_wall_dict['bottom'] not in ['monolith', 'exit']):
                     return False
-                if (col == 0) and (walls['left'] not in ['monolith', 'exit']):
+                if (col == 0) and (cell_wall_dict['left'] not in ['monolith', 'exit']):
                     return False
-                if (col == N-1) and (walls['right'] not in ['monolith', 'exit']):
+                if (col == N-1) and (cell_wall_dict['right'] not in ['monolith', 'exit']):
                     return False
         return True
 
     def validate_exit(self, labyrinth):
-        if not labyrinth.exit:
+        if not labyrinth.get_exit():
             return False
 
         exit_count = 0
-        N = labyrinth.size
+        N = labyrinth.get_size()
         for row in range(N):
             for col in range(N):
                 cell = labyrinth[row][col]
-                walls = cell['walls'].values()
-                if 'exit' in walls:
+                cell_wall_list = cell.get_walls().values()
+                if 'exit' in cell_wall_list:
                     exit_count += 1
         return exit_count == 1
         

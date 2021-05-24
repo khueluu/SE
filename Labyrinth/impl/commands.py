@@ -15,7 +15,7 @@ class GoUp(IUserCommand):
     def __call__(self, lbr: ILabyrinth):
         controller = Controller(lbr)
         controller.move(self.get_command_tag())
-        return deepcopy(controller.lbr)
+        return controller.get_labyrinth()
 
 
 class GoDown(IUserCommand):
@@ -28,7 +28,7 @@ class GoDown(IUserCommand):
     def __call__(self, lbr: ILabyrinth):
         controller = Controller(lbr)
         controller.move(self.get_command_tag())
-        return deepcopy(controller.lbr)
+        return controller.get_labyrinth()
 
 
 class GoLeft(IUserCommand):
@@ -41,7 +41,7 @@ class GoLeft(IUserCommand):
     def __call__(self, lbr: ILabyrinth):
         controller = Controller(lbr)
         controller.move(self.get_command_tag())
-        return deepcopy(controller.lbr)
+        return controller.get_labyrinth()
 
 
 class GoRight(IUserCommand):
@@ -54,7 +54,7 @@ class GoRight(IUserCommand):
     def __call__(self, lbr: ILabyrinth):
         controller = Controller(lbr)
         controller.move(self.get_command_tag())
-        return deepcopy(controller.lbr)
+        return controller.get_labyrinth()
 
 
 class Skip(IUserCommand):
@@ -67,7 +67,7 @@ class Skip(IUserCommand):
     def __call__(self, lbr: ILabyrinth):
         controller = Controller(lbr)
         controller.skip()
-        return deepcopy(controller.lbr)
+        return controller.get_labyrinth()
 
 
 class Quit(IUserCommand):
@@ -103,5 +103,5 @@ class Load(IUserCommand):
 
     def __call__(self, lbr: ILabyrinth, input_file: str):
         lbr.load(input_file)
-        print(f"Loaded labyrinth of size {lbr.size}x{lbr.size}")
+        print(f"Loaded labyrinth of size {lbr.get_size()}x{lbr.get_size()}")
         return lbr

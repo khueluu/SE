@@ -1,6 +1,2 @@
-1. Lbr, validator, generator(2 impls: current one, create totally random lbr then get validated)
-    - Inject labyrinth generator
-    - Seperate labyrinth and labyrinth generator
-    - The lbr should not know how walls are created
-    - Validator that checks if lbr is good (eg, ensure every cell is reachable), if not, create a new one
-2. The importance is using dependency injection
+- Move save, load to other class
+- Update Labybrinth interface => everything used is here

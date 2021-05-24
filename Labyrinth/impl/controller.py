@@ -1,4 +1,5 @@
 import sys
+from copy import deepcopy
 from services.controller import IController
 from mapper import *
 
@@ -12,12 +13,12 @@ def get_next_idx_of_seq(idx, seq_length):
 
 class Controller(IController):
     def __init__(self, labyrinth):
-        self.lbr = labyrinth
+        self.__lbr = labyrinth
 
 
     # Helpers
     def check_exit(self):
-        if self.lbr.found_treasure:
+        if self.__lbr.get_found_treasure():
             print(messages['win'])
             sys.exit()
     
@@ -25,8 +26,8 @@ class Controller(IController):
         mapper = movement_mapper[direction]
         wall_type = mapper['wall_to_check']
         row, col = cell
-        current = self.lbr[row][col]
-        return current['walls'][wall_type]
+        cell_wall_dict = self.__lbr[row][col].get_walls()
+        return cell_wall_dict[wall_type]
     
     def do_step_impossible(self, wall_type):
         if wall_type == 'exit':
@@ -38,7 +39,7 @@ class Controller(IController):
         row, col = cell
         new_row = row + mapper['row_change']
         new_col = col + mapper['col_change']
-        self.lbr.set_current(new_row, new_col)
+        self.__lbr.set_current(new_row, new_col)
         print(messages['step_possible'])
         new_cell = (new_row, new_col)
         return new_cell
@@ -51,39 +52,41 @@ class Controller(IController):
 
     # Treasure
     def is_treasure(self, cell):
-        if not self.lbr.treasure:
+        treasure = self.__lbr.get_treasure()
+        if not treasure:
             return False
-        return is_same_cell(cell, self.lbr.treasure)
+        return is_same_cell(cell, treasure)
     
     def check_treasure(self, cell):
         if self.is_treasure(cell):
             print(messages['objects']['treasure'])
-            self.lbr.found_treasure = True
-            self.lbr.treasure = None
-
+            self.__lbr.set_found_treasure()
 
     # Wormhole
     def is_wormhole(self, cell):
-        for wormhole in self.lbr.wormholes:
+        wormholes = self.__lbr.get_wormholes()
+        for wormhole in wormholes:
             if is_same_cell(cell, wormhole):
                 return True
         return False
 
     def get_wormhole_idx(self, cell):
-        for idx, wormhole in enumerate(self.lbr.wormholes):
+        wormholes = self.__lbr.get_wormholes()
+        for idx, wormhole in enumerate(wormholes):
             if is_same_cell(cell, wormhole):
                 return idx
 
     def get_next_wormhole(self, current_idx):
-        wormholes_len = len(self.lbr.wormholes)
+        wormholes = self.__lbr.get_wormholes()
+        wormholes_len = len(wormholes)
         next_idx = get_next_idx_of_seq(current_idx, wormholes_len)
-        return self.lbr.wormholes[next_idx]
+        return self.__lbr.get_wormhole_by_idx(idx=next_idx)
 
     def move_through_wormhole(self, cell):
-        wormhole_idx = self.get_wormhole_idx(cell)
-        next_wormhole = self.get_next_wormhole(wormhole_idx)
+        current_idx = self.get_wormhole_idx(cell)
+        next_wormhole = self.get_next_wormhole(current_idx)
         
-        self.lbr.set_current(next_wormhole[0], next_wormhole[1])
+        self.__lbr.set_current(next_wormhole[0], next_wormhole[1])
         print(messages['objects']['wormhole_next'])
 
         self.check_treasure(next_wormhole)
@@ -98,7 +101,7 @@ class Controller(IController):
     # Actions
     def move(self, direction: str):
         mapper = movement_mapper[direction]
-        current_cell = self.lbr.current
+        current_cell = self.__lbr.get_current()
         directing_wall = self.get_directing_wall(current_cell, direction)
 
         if directing_wall:
@@ -107,7 +110,10 @@ class Controller(IController):
             self.do_step_possible(current_cell, direction)
 
     def skip(self):
-        current_cell = self.lbr.current
+        current_cell = self.__lbr.get_current()
         print(messages['skip'])
         self.check_wormhole(current_cell, verbose=False)
+
+    def get_labyrinth(self):
+        return deepcopy(self.__lbr)
             

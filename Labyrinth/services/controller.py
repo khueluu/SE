@@ -8,4 +8,7 @@ class IController(metaclass=ABCMeta):
     @abstractmethod
     def skip(self): pass
 
+    @abstractmethod
+    def get_labyrinth(self): pass
+
     

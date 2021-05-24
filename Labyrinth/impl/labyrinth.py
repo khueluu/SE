@@ -2,62 +2,110 @@ import random
 import json
 from copy import deepcopy
 
-from services.labyrinth import ILabyrinth, ILabyrinthGenerator
+from services.labyrinth import ICell, ILabyrinth, ILabyrinthGenerator
 from utils import *
 
 random.seed(0)
 
+class Cell(ICell):
+    def __init__(self, row: int, col: int, walls: dict):
+        self.__position = (row, col)
+        self.__walls = walls
+
+    def get_position(self):
+        return deepcopy(self.__position)
+
+    def get_walls(self):
+        return deepcopy(self.__walls)
+
+    def set_wall(self, wall_name: str, wall_type: str):
+        self.__walls[wall_name] = wall_type
+
+
 class Labyrinth(ILabyrinth):
     def __init__(self):
-        self.size = None
-        self.maze = None
-        self.current = None
-        self.exit = None
-        self.treasure = None
-        self.found_treasure = False
-        self.wormholes = None
-        self.generator = None
-        self.walls = None
+        self.__size = None
+        self.__maze = None
+        self.__current = None
+        self.__exit = None
+        self.__treasure = None
+        self.__found_treasure = False
+        self.__wormholes = None
+        self.__generator = None
+        self.__walls = None
 
     def __getitem__(self, idx):
-        if self.maze:
-            return self.maze[idx]
+        if self.__maze:
+            return self.__maze[idx]
         else:
             return 'Labyrinth has not been created or loaded.'
 
     def __str__(self):
         return f"""
-        'size': ({self.size}, {self.size})
-        'wormholes': {self.wormholes}
-        'treasure': {self.treasure}
-        'exit': {self.exit}
-        'walls': {self.walls}
-        'current': {self.current}
-        'found_treasure': {self.found_treasure}
+        'size': ({self.__size}, {self.__size})
+        'wormholes': {self.__wormholes}
+        'treasure': {self.__treasure}
+        'exit': {self.__exit}
+        'walls': {self.__walls}
+        'current': {self.__current}
+        'found_treasure': {self.__found_treasure}
         """
 
     def create(self, size: int, generator: ILabyrinthGenerator):
-        self.size = size
-        self.generator = generator
+        self.__size = size
+        self.__generator = generator
+        self.__maze = self.create_maze(size)
+        self.__exit = self.set_exit_to_maze()
+        self.__current = self.__generator.random_cell()
+        self.__treasure = self.__generator.random_cell()
+        self.__wormholes = self.__generator.random_sequence_of_cells()
+        self.__walls = self.set_walls_to_maze()
 
-        self.maze = self.create_maze(size)
-        self.exit = self.set_exit_to_maze()
-        self.current = self.generator.random_cell()
-        self.treasure = self.generator.random_cell()
-        self.wormholes = self.generator.random_sequence_of_cells()
-        self.walls = self.set_walls_to_maze()
+    def get_size(self):
+        return self.__size
+    
+    def get_exit(self):
+        return deepcopy(self.__exit)
+    
+    def get_treasure(self):
+        return deepcopy(self.__treasure)
 
+    def get_wormholes(self):
+        return deepcopy(self.__wormholes)
+
+    def get_wormhole_by_idx(self, idx: int):
+        return deepcopy(self.__wormholes[idx])
+
+    def get_walls(self):
+        return deepcopy(self.__walls)
+
+    def get_current(self):
+        return deepcopy(self.__current)
+
+    def set_current(self, row, col):
+        self.__current = (row, col)
+
+    def get_current_cell(self):
+        row, col = self.__current
+        return self.__maze[row][col]
+
+    def get_found_treasure(self):
+        return self.__found_treasure
+        
+    def set_found_treasure(self):
+        self.__found_treasure = True
+        self.__treasure = None
 
     def set_walls_to_maze(self):
-        random_walls = self.generator.random_walls()
+        random_walls = self.__generator.random_walls()
         for wall_data in random_walls:
-            (row, col), wall_type = wall_data
-            self.maze[row][col]['walls'][wall_type] = 'wall'
+            (row, col), wall_name = wall_data
+            self.__maze[row][col].set_wall(wall_name, 'wall')
         return deepcopy(random_walls)
 
     def set_exit_to_maze(self):
-        (row, col), wall_type = random.choice(self.get_monoliths())
-        self.maze[row][col]['walls'][wall_type] = 'exit'
+        (row, col), wall_name = random.choice(self.get_monoliths())
+        self.__maze[row][col].set_wall(wall_name, 'exit')
         return (row, col)
 
     def create_maze(self, size):
@@ -71,42 +119,32 @@ class Labyrinth(ILabyrinth):
                     'left': 'monolith' if col == 0 else None,
                     'right': 'monolith' if col == size-1 else None,
                 }
-                cell = {
-                    'position': (row, col),
-                    'walls': walls,
-                }
+                cell = Cell(row, col, walls)
                 maze_row.append(cell)
             maze.append(maze_row)
         return deepcopy(maze)
 
     def get_monoliths(self):
         monoliths = []
-        for row in self.maze:
+        for row in self.__maze:
             for cell in row:
-                walls = cell['walls']
-                for wall, wall_type in walls.items():
+                cell_wall_dict = cell.get_walls()
+                for wall_name, wall_type in cell_wall_dict.items():
                     if wall_type == 'monolith':
-                        monolith = (cell['position'], wall)
+                        monolith = (cell.get_position(), wall_name)
                         monoliths.append(monolith)
         return deepcopy(monoliths)
 
-    def get_current(self):
-        row, col = self.current
-        return self.maze[row][col]
-
-    def set_current(self, row, col):
-        self.current = (row, col)
-
     def save(self, output_file='labyrinth.txt'):
         state_dict = {
-            'size': self.size,
-            'maze': self.maze,
-            'wormholes': self.wormholes,
-            'treasure': self.treasure,
-            'exit': self.exit,
-            'walls': self.walls,
-            'current': self.current,
-            'found_treasure': self.found_treasure
+            'size': self.__size,
+            'maze': self.__maze,
+            'wormholes': self.__wormholes,
+            'treasure': self.__treasure,
+            'exit': self.__exit,
+            'walls': self.__walls,
+            'current': self.__current,
+            'found_treasure': self.__found_treasure
         }
 
         with open(output_file, 'w') as f:
@@ -117,26 +155,25 @@ class Labyrinth(ILabyrinth):
             data = json.load(f)
         state_dict = deepcopy(data)
 
-        self.size = state_dict['size']
-        self.maze = state_dict['maze']
-        self.wormholes= state_dict['wormholes']
-        self.treasure = state_dict['treasure']
-        self.exit = state_dict['exit']
-        self.walls = state_dict['walls']
-        self.current = state_dict['current']
-        self.found_treasure = state_dict['found_treasure']
-
+        self.__size = state_dict['size']
+        self.__maze = state_dict['maze']
+        self.__wormholes= state_dict['wormholes']
+        self.__treasure = state_dict['treasure']
+        self.__exit = state_dict['exit']
+        self.__walls = state_dict['walls']
+        self.__current = state_dict['current']
+        self.__found_treasure = state_dict['found_treasure']
 
 
 class LabyrinthGenerator(ILabyrinthGenerator):
     def __init__(self, size, wall_rate=0.5, sequence_length=5):
-        self.size = size
+        self.__size = size
         self.wall_rate = wall_rate
         self.sequence_length = sequence_length
     
     def random_border_cell(self):
         min_ = 0
-        max_ = self.size-1
+        max_ = self.__size-1
 
         if random.random() >= 0.5:
             row = random.choice([min_, max_])
@@ -148,14 +185,14 @@ class LabyrinthGenerator(ILabyrinthGenerator):
         return (row, col)
 
     def random_cell(self):
-        return tuple(random.choices(range(self.size), k=2))
+        return tuple(random.choices(range(self.__size), k=2))
 
     def random_sequence_of_cells(self):
         return tuple(self.random_cell() for i in range(self.sequence_length))
 
     def random_walls(self):
         random_walls = []
-        N = int(self.size*self.size*self.wall_rate)
+        N = int(self.__size*self.__size*self.wall_rate)
 
         for i in range(N):
             random_wall = tuple([
@@ -168,7 +205,7 @@ class LabyrinthGenerator(ILabyrinthGenerator):
             matching_wall = get_matching_wall(row, col, wall_type)
             (new_row, new_col), new_wall_type = matching_wall
 
-            if is_between(new_row, 0, self.size-1) and is_between(new_col, 0, self.size-1):
+            if is_between(new_row, 0, self.__size-1) and is_between(new_col, 0, self.__size-1):
                 random_walls.append(matching_wall)
 
         random_walls = list(set(random_walls))
