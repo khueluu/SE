@@ -2,7 +2,7 @@ import random
 from copy import deepcopy
 
 from services.labyrinth import ICell, ILabyrinth
-from services.generator import ILabyrinthGenerator
+from services.generator import IGenerator
 from utils import *
 
 random.seed(0)
@@ -57,7 +57,7 @@ class Labyrinth(ILabyrinth):
         'found_treasure': {self.__found_treasure}
         """
 
-    def create(self, size: int, generator: ILabyrinthGenerator):
+    def create(self, size: int, generator: IGenerator):
         self.__size = size
         self.__generator = generator
         self.__maze = self.set_maze(size)

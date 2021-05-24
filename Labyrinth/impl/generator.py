@@ -1,11 +1,11 @@
 import random
 
-from services.generator import ILabyrinthGenerator
+from services.generator import IGenerator
 from utils import get_matching_wall, is_between
 
 random.seed(0)
 
-class LabyrinthGenerator(ILabyrinthGenerator):
+class Generator(IGenerator):
     def __init__(self, size, wall_rate=0.5, sequence_length=5):
         self.__size = size
         self.wall_rate = wall_rate

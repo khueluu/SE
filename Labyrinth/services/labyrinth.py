@@ -1,5 +1,5 @@
 from abc import *
-from services.generator import ILabyrinthGenerator
+from services.generator import IGenerator
 
 class ICell(metaclass=ABCMeta):
     @abstractmethod
@@ -23,7 +23,7 @@ class ILabyrinth(metaclass=ABCMeta):
     def __getitem__(self, idx: int): pass
 
     @abstractmethod
-    def create(self, size: int, generator: ILabyrinthGenerator): pass
+    def create(self, size: int, generator: IGenerator): pass
 
     @abstractmethod
     def do_found_treasure(self): pass

@@ -112,8 +112,8 @@ class Controller(IController):
             self.do_step_possible(current_cell, direction)
 
     def skip(self):
-        current_cell = self.__lbr.get_current()
         print(messages['skip'])
+        current_cell = self.__lbr.get_current()
         self.check_wormhole(current_cell, verbose=False)
 
     def get_labyrinth(self):

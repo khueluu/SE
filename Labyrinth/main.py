@@ -3,7 +3,7 @@ import random
 import os
 
 from impl.labyrinth import Labyrinth
-from impl.generator import LabyrinthGenerator
+from impl.generator import Generator
 from impl.validator import Validator
 from utils import *
 
@@ -34,17 +34,17 @@ def generate_labyrinth(size, wall_rate=0.5, sequence_length=5):
     count = 0
     while not finished:
         count += 1
-
-        lbr = Labyrinth()
-        lbr_gen = LabyrinthGenerator(
+        generator = Generator(
             size=size,
             wall_rate=wall_rate,
             sequence_length=sequence_length)
-        lbr.create(size=size, generator=lbr_gen)
-
+        
+        lbr = Labyrinth()
+        lbr.create(size=size, generator=generator)
         is_valid_labyrinth = validator.validate(lbr)
         if is_valid_labyrinth:
             finished = True
+            
     print(f'Created labyrinth of size {lbr.get_size()}x{lbr.get_size()} after {count} generation(s).')
     return lbr
 

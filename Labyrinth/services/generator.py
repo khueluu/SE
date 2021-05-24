@@ -1,6 +1,6 @@
 from abc import *
 
-class ILabyrinthGenerator(metaclass=ABCMeta):
+class IGenerator(metaclass=ABCMeta):
     @abstractmethod
     def random_border_cell(self): pass
 
