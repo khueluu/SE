@@ -1,4 +1,5 @@
 import sys
+import json
 from copy import deepcopy
 from services.controller import IController
 from mapper import *
@@ -14,7 +15,6 @@ def get_next_idx_of_seq(idx, seq_length):
 class Controller(IController):
     def __init__(self, labyrinth):
         self.__lbr = labyrinth
-
 
     # Helpers
     def check_exit(self):
@@ -39,9 +39,10 @@ class Controller(IController):
         row, col = cell
         new_row = row + mapper['row_change']
         new_col = col + mapper['col_change']
-        self.__lbr.set_current(new_row, new_col)
-        print(messages['step_possible'])
         new_cell = (new_row, new_col)
+        self.__lbr.set_current(new_cell)
+        print(messages['step_possible'])
+        
         return new_cell
 
     def do_step_possible(self, cell, direction):
@@ -60,7 +61,8 @@ class Controller(IController):
     def check_treasure(self, cell):
         if self.is_treasure(cell):
             print(messages['objects']['treasure'])
-            self.__lbr.set_found_treasure()
+            self.__lbr.do_found_treasure()
+
 
     # Wormhole
     def is_wormhole(self, cell):
@@ -86,7 +88,7 @@ class Controller(IController):
         current_idx = self.get_wormhole_idx(cell)
         next_wormhole = self.get_next_wormhole(current_idx)
         
-        self.__lbr.set_current(next_wormhole[0], next_wormhole[1])
+        self.__lbr.set_current(next_wormhole)
         print(messages['objects']['wormhole_next'])
 
         self.check_treasure(next_wormhole)
@@ -116,4 +118,33 @@ class Controller(IController):
 
     def get_labyrinth(self):
         return deepcopy(self.__lbr)
-            
+
+    def save(self, output_file='labyrinth.txt'):
+        state_dict = {
+            'size': self.__lbr.get_size(),
+            'maze': self.__lbr.get_maze(),
+            'wormholes': self.__lbr.get_wormholes(),
+            'treasure': self.__lbr.get_treasure(),
+            'exit': self.__lbr.get_exit(),
+            'walls': self.__lbr.get_walls(),
+            'current': self.__lbr.get_current(),
+            'found_treasure': self.__lbr.get_found_treasure()
+        }
+
+        with open(output_file, 'w') as f:
+            f.write(json.dumps(state_dict))
+
+    def load(self, input_file):
+        with open(input_file, 'r') as f:
+            data = json.load(f)
+        state_dict = deepcopy(data)
+
+        self.__lbr.set_size(state_dict['size'])
+        self.__lbr.set_maze_from_data(state_dict['maze'])
+        self.__lbr.set_wormholes(state_dict['wormholes'])
+        self.__lbr.set_treasure(state_dict['treasure'])
+        self.__lbr.set_exit(state_dict['exit'])
+        self.__lbr.set_walls(state_dict['walls'])
+        self.__lbr.set_current(state_dict['current'])
+        self.__lbr.set_found_treasure(state_dict['found_treasure'])
+    

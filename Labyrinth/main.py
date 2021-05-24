@@ -2,7 +2,8 @@ import sys
 import random
 import os
 
-from impl.labyrinth import Labyrinth, LabyrinthGenerator
+from impl.labyrinth import Labyrinth
+from impl.generator import LabyrinthGenerator
 from impl.validator import Validator
 from utils import *
 
@@ -69,9 +70,8 @@ def load_labyrinth():
             input_file = input("$> Please type file path to load labyrinth: ")
             is_valid = validate(os.path.isfile(input_file), "File not found")
             if is_valid:
-                lbr = Labyrinth()
-                lbr.load(input_file=input_file)
-                print(f"Loaded labyrinth of size {lbr.get_size()}x{lbr.get_size()}")
+                cmd = supported_commands['load']
+                lbr = cmd(lbr=Labyrinth(), input_file=input_file)
                 finished = True
                 return lbr
     except KeyboardInterrupt:

@@ -1,4 +1,5 @@
 from abc import *
+from services.generator import ILabyrinthGenerator
 
 class ICell(metaclass=ABCMeta):
     @abstractmethod
@@ -13,6 +14,7 @@ class ICell(metaclass=ABCMeta):
     @abstractmethod
     def get_dict(self): pass
 
+
 class ILabyrinth(metaclass=ABCMeta):
     @abstractmethod
     def create(self, size: int): pass
@@ -21,16 +23,20 @@ class ILabyrinth(metaclass=ABCMeta):
     def __getitem__(self, idx: int): pass
 
     @abstractmethod
-    def get_current(self): pass
+    def create(self, size: int, generator: ILabyrinthGenerator): pass
 
     @abstractmethod
-    def set_current(self): pass
+    def do_found_treasure(self): pass
 
-    @abstractmethod
-    def get_walls(self): pass
-
+    # Getters
     @abstractmethod
     def get_size(self): pass
+    
+    @abstractmethod
+    def get_exit(self): pass
+    
+    @abstractmethod
+    def get_treasure(self): pass
 
     @abstractmethod
     def get_wormholes(self): pass
@@ -39,30 +45,42 @@ class ILabyrinth(metaclass=ABCMeta):
     def get_wormhole_by_idx(self, idx: int): pass
 
     @abstractmethod
-    def get_exit(self): pass
+    def get_walls(self): pass
+
+    @abstractmethod
+    def get_current(self): pass
 
     @abstractmethod
     def get_found_treasure(self): pass
 
     @abstractmethod
-    def set_found_treasure(self): pass
+    def get_maze(self): pass
+
+    # Setters
+    @abstractmethod
+    def set_size(self, size: int): pass
 
     @abstractmethod
-    def load(self, input_file: str): pass
+    def set_exit(self, exit_): pass
 
     @abstractmethod
-    def save(self, output_file: str): pass
-
-
-class ILabyrinthGenerator(metaclass=ABCMeta):
-    @abstractmethod
-    def random_border_cell(self): pass
+    def set_treasure(self, treasure): pass
 
     @abstractmethod
-    def random_walls(self): pass
+    def set_wormholes(self, wormholes: list): pass
 
     @abstractmethod
-    def random_sequence_of_cells(self, length: int): pass
+    def set_walls(self, walls: list): pass
 
     @abstractmethod
-    def random_cell(self): pass
+    def set_current(self, current): pass
+
+    @abstractmethod
+    def set_found_treasure(self, found_treasure: bool): pass
+    
+    @abstractmethod
+    def set_maze(self, size: int): pass
+
+    @abstractmethod
+    def set_maze_from_data(self, data: list): pass
+

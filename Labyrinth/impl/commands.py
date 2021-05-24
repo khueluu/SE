@@ -89,7 +89,8 @@ class Save(IUserCommand):
         return 1
 
     def __call__(self, lbr: ILabyrinth, output_file='labyrinth.txt'): 
-        lbr.save(output_file)
+        controller = Controller(lbr)
+        controller.save(output_file)
         print(f'Saved to {output_file} and quit')
         sys.exit()
 
@@ -102,6 +103,8 @@ class Load(IUserCommand):
         return 1
 
     def __call__(self, lbr: ILabyrinth, input_file: str):
-        lbr.load(input_file)
-        print(f"Loaded labyrinth of size {lbr.get_size()}x{lbr.get_size()}")
-        return lbr
+        controller = Controller(lbr)
+        controller.load(input_file)
+        new_lbr = controller.get_labyrinth()
+        print(f"Loaded labyrinth of size {new_lbr.get_size()}x{new_lbr.get_size()}")
+        return new_lbr
