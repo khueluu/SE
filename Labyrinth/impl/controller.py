@@ -2,18 +2,19 @@ import sys
 import json
 from copy import deepcopy
 from services.controller import IController
+from services.labyrinth import ILabyrinth
 from mapper import *
 
-def is_same_cell(cell_1, cell_2):
+def is_same_cell(cell_1: tuple, cell_2: tuple):
     return (cell_1[0] == cell_2[0]) and (cell_1[1] == cell_2[1])
 
-def get_next_idx_of_seq(idx, seq_length):
+def get_next_idx_of_seq(idx: int, seq_length: int):
     next_idx = idx + 1
     return next_idx if next_idx < seq_length else 0
 
 
 class Controller(IController):
-    def __init__(self, labyrinth):
+    def __init__(self, labyrinth: ILabyrinth):
         self.__lbr = labyrinth
 
     # Helpers
@@ -22,19 +23,19 @@ class Controller(IController):
             print(messages['win'])
             sys.exit()
     
-    def get_directing_wall(self, cell, direction):
+    def get_directing_wall(self, cell: tuple, direction: str):
         mapper = movement_mapper[direction]
         wall_type = mapper['wall_to_check']
         row, col = cell
         cell_wall_dict = self.__lbr[row][col].get_walls()
         return cell_wall_dict[wall_type]
     
-    def do_step_impossible(self, wall_type):
+    def do_step_impossible(self, wall_type: str):
         if wall_type == 'exit':
             self.check_exit()
         print(messages['step_impossible'][wall_type])
 
-    def move_cell(self, cell, direction):
+    def move_cell(self, cell: tuple, direction: str):
         mapper = movement_mapper[direction]
         row, col = cell
         new_row = row + mapper['row_change']
@@ -45,46 +46,46 @@ class Controller(IController):
         
         return new_cell
 
-    def do_step_possible(self, cell, direction):
+    def do_step_possible(self, cell: tuple, direction: str):
         new_cell = self.move_cell(cell, direction)
         self.check_treasure(new_cell)
         self.check_wormhole(new_cell)
 
 
     # Treasure
-    def is_treasure(self, cell):
+    def is_treasure(self, cell: tuple):
         treasure = self.__lbr.get_treasure()
         if not treasure:
             return False
         return is_same_cell(cell, treasure)
     
-    def check_treasure(self, cell):
+    def check_treasure(self, cell: tuple):
         if self.is_treasure(cell):
             print(messages['objects']['treasure'])
             self.__lbr.do_found_treasure()
 
 
     # Wormhole
-    def is_wormhole(self, cell):
+    def is_wormhole(self, cell: tuple):
         wormholes = self.__lbr.get_wormholes()
         for wormhole in wormholes:
             if is_same_cell(cell, wormhole):
                 return True
         return False
 
-    def get_wormhole_idx(self, cell):
+    def get_wormhole_idx(self, cell: tuple):
         wormholes = self.__lbr.get_wormholes()
         for idx, wormhole in enumerate(wormholes):
             if is_same_cell(cell, wormhole):
                 return idx
 
-    def get_next_wormhole(self, current_idx):
+    def get_next_wormhole(self, current_idx: int):
         wormholes = self.__lbr.get_wormholes()
         wormholes_len = len(wormholes)
         next_idx = get_next_idx_of_seq(current_idx, wormholes_len)
         return self.__lbr.get_wormhole_by_idx(idx=next_idx)
 
-    def move_through_wormhole(self, cell):
+    def move_through_wormhole(self, cell: tuple):
         current_idx = self.get_wormhole_idx(cell)
         next_wormhole = self.get_next_wormhole(current_idx)
         
@@ -93,7 +94,7 @@ class Controller(IController):
 
         self.check_treasure(next_wormhole)
 
-    def check_wormhole(self, cell, verbose=True):
+    def check_wormhole(self, cell: tuple, verbose=True):
         if self.is_wormhole(cell):
             if verbose:
                 print(messages['objects']['wormhole'])
@@ -134,7 +135,7 @@ class Controller(IController):
         with open(output_file, 'w') as f:
             f.write(json.dumps(state_dict))
 
-    def load(self, input_file):
+    def load(self, input_file: str):
         with open(input_file, 'r') as f:
             data = json.load(f)
         state_dict = deepcopy(data)

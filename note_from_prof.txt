@@ -1,4 +1,5 @@
 - draw class diagram, write responsibility of the class near the class (powerpoint, any tools, draw.io)
-- save and class in different class
+- save and load in Saver and Loader classes
 - use tuple instead of list
-- validate data to Labybrinth before saving it, raise an error if the input file is not correct (eg: treasure missing, exit missing, etc.)
+- validate direction
+- validate data to Labybrinth before loading it, raise an error if the input file is not correct (eg: treasure missing, exit missing, etc.)

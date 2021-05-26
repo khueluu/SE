@@ -34,7 +34,7 @@ def is_valid_args(cmd : IUserCommand, args: list):
     error_message = f"Invalid number of args. Expected: {cmd_args_count}, got {current_args_count}"
     return validate(assertion, error_message)
 
-def parse_user_input(user_input):
+def parse_user_input(user_input: str):
     tokens = user_input.strip().split(" ")
 
     if len(tokens) == 0:
@@ -50,19 +50,19 @@ def parse_user_input(user_input):
 def is_between(value, left, right):
     return left <= value and value <= right
 
-def get_duplicate(list_):
+def get_duplicate(list_: list):
     tup = tuple(tuple(ele) for ele in list_)
     res = [ele for ele, count in Counter(tup).items() if count > 1]
     return res
 
-def get_matching_wall(row, col, wall_type):
-        if wall_type == 'top':
-            return ((row-1, col), 'bottom')
-        if wall_type == 'bottom':
-            return ((row+1, col), 'top')
-        if wall_type == 'left':
-            return ((row, col-1), 'right')
-        if wall_type == 'right':
-            return((row, col+1), 'left')
+def get_matching_wall(row: int, col: int, wall_type: str):
+    if wall_type == 'top':
+        return ((row-1, col), 'bottom')
+    if wall_type == 'bottom':
+        return ((row+1, col), 'top')
+    if wall_type == 'left':
+        return ((row, col-1), 'right')
+    if wall_type == 'right':
+        return((row, col+1), 'left')
 
 

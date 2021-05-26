@@ -58,19 +58,19 @@ class ILabyrinth(metaclass=ABCMeta):
     def set_size(self, size: int): pass
 
     @abstractmethod
-    def set_exit(self, exit_): pass
+    def set_exit(self, exit_: tuple): pass
 
     @abstractmethod
-    def set_treasure(self, treasure): pass
+    def set_treasure(self, treasure: tuple): pass
 
     @abstractmethod
-    def set_wormholes(self, wormholes: list): pass
+    def set_wormholes(self, wormholes: tuple): pass
 
     @abstractmethod
-    def set_walls(self, walls: list): pass
+    def set_walls(self, walls: tuple): pass
 
     @abstractmethod
-    def set_current(self, current): pass
+    def set_current(self, current: tuple): pass
 
     @abstractmethod
     def set_found_treasure(self, found_treasure: bool): pass

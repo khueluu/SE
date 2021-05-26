@@ -1,5 +1,4 @@
 import sys
-from copy import deepcopy
 
 from services.command import IUserCommand
 from services.labyrinth import ILabyrinth

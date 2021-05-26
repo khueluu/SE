@@ -35,18 +35,16 @@ class Generator(IGenerator):
         N = int(self.__size*self.__size*self.wall_rate)
 
         for i in range(N):
-            random_wall = tuple([
-                self.random_cell(),
-                random.choice(['top', 'bottom', 'left', 'right'])
-            ])
+            row, col = self.random_cell()
+            wall_name = random.choice(['top', 'bottom', 'left', 'right'])
+
+            random_wall = ((row, col), wall_name)
             random_walls.append(random_wall)
             
-            (row, col), wall_type = random_wall
-            matching_wall = get_matching_wall(row, col, wall_type)
-            (new_row, new_col), new_wall_type = matching_wall
+            matching_wall = get_matching_wall(row, col, wall_name)
+            (new_row, new_col), new_wall_name = matching_wall
 
             if is_between(new_row, 0, self.__size-1) and is_between(new_col, 0, self.__size-1):
                 random_walls.append(matching_wall)
 
-        random_walls = list(set(random_walls))
-        return random_walls
+        return tuple(set(random_walls))

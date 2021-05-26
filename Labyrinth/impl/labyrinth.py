@@ -13,7 +13,7 @@ class Cell(ICell):
         self.__walls = walls
 
     def get_position(self):
-        return deepcopy(self.__position)
+        return self.__position
 
     def get_walls(self):
         return deepcopy(self.__walls)
@@ -40,7 +40,7 @@ class Labyrinth(ILabyrinth):
         self.__generator = None
         self.__walls = None
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int):
         if self.__maze:
             return self.__maze[idx]
         else:
@@ -90,19 +90,19 @@ class Labyrinth(ILabyrinth):
                     if wall_type == 'monolith':
                         monolith = (cell.get_position(), wall_name)
                         monoliths.append(monolith)
-        return deepcopy(monoliths)
+        return tuple(monoliths)
 
     def get_wormholes(self):
-        return deepcopy(self.__wormholes)
+        return self.__wormholes
 
     def get_wormhole_by_idx(self, idx: int):
-        return deepcopy(self.__wormholes[idx])
+        return self.__wormholes[idx]
 
     def get_walls(self):
-        return deepcopy(self.__walls)
+        return self.__walls
 
     def get_current(self):
-        return deepcopy(self.__current)
+        return self.__current
 
     def get_found_treasure(self):
         return self.__found_treasure
@@ -114,8 +114,8 @@ class Labyrinth(ILabyrinth):
             for cell in row:
                 cell_dict = cell.get_dict()
                 maze_row.append(cell_dict)
-            maze.append(maze_row)
-        return deepcopy(maze)
+            maze.append(tuple(maze_row))
+        return tuple(maze)
 
     # Setters
     def set_size(self, size: int):
@@ -129,17 +129,17 @@ class Labyrinth(ILabyrinth):
     def set_treasure(self, treasure):
         self.__treasure = treasure
 
-    def set_wormholes(self, wormholes: list):
-        self.__wormholes = deepcopy(wormholes)
+    def set_wormholes(self, wormholes: tuple):
+        self.__wormholes = wormholes
 
-    def set_walls(self, walls: list):
+    def set_walls(self, walls: tuple):
         for wall_data in walls:
             (row, col), wall_name = wall_data
             self.__maze[row][col].set_wall(wall_name, 'wall')
-        return deepcopy(walls)
+        return walls
 
-    def set_current(self, current):
-        self.__current = deepcopy(current)
+    def set_current(self, current: tuple):
+        self.__current = current
 
     def set_found_treasure(self, found_treasure: bool):
         self.__found_treasure = found_treasure
@@ -157,8 +157,8 @@ class Labyrinth(ILabyrinth):
                 }
                 cell = Cell(row, col, walls)
                 maze_row.append(cell)
-            maze.append(maze_row)
-        return deepcopy(maze)
+            maze.append(tuple(maze_row))
+        return tuple(maze)
 
     def set_maze_from_data(self, data: list):
         new_maze = []
@@ -168,5 +168,5 @@ class Labyrinth(ILabyrinth):
                 row, col = cell.get('position')
                 walls = cell.get('walls')
                 new_maze_row.append(Cell(row, col, walls))
-            new_maze.append(new_maze_row)
-        self.__maze = deepcopy(new_maze)
+            new_maze.append(tuple(new_maze_row))
+        self.__maze = tuple(new_maze)
