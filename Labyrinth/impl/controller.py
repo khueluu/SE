@@ -139,6 +139,10 @@ class Controller(IController):
             data = json.load(f)
         state_dict = deepcopy(data)
 
+        # create new labyrinth + pass state_dict to the labyrinth
+        # make sure the labyrinth check the state_dict, raise error if no treasure or exit, etc.
+
+        # save the state of the labyrinth, remove
         self.__lbr.set_size(state_dict['size'])
         self.__lbr.set_maze_from_data(state_dict['maze'])
         self.__lbr.set_wormholes(state_dict['wormholes'])

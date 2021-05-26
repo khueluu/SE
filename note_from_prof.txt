@@ -1,2 +1,4 @@
-- Move save, load to other class
-- Update Labybrinth interface => everything used is here
+- draw class diagram, write responsibility of the class near the class (powerpoint, any tools, draw.io)
+- save and class in different class
+- use tuple instead of list
+- validate data to Labybrinth before saving it, raise an error if the input file is not correct (eg: treasure missing, exit missing, etc.)
