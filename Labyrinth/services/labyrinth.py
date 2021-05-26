@@ -17,9 +17,6 @@ class ICell(metaclass=ABCMeta):
 
 class ILabyrinth(metaclass=ABCMeta):
     @abstractmethod
-    def create(self, size: int): pass
-
-    @abstractmethod
     def __getitem__(self, idx: int): pass
 
     @abstractmethod

@@ -61,7 +61,7 @@ class Labyrinth(ILabyrinth):
         self.__size = size
         self.__generator = generator
         self.__maze = self.set_maze(size)
-        self.__exit = self.set_exit()
+        self.__exit = self.set_exit(random.choice(self.get_monoliths()))
         self.__current = self.__generator.random_cell()
         self.__treasure = self.__generator.random_cell()
         self.__wormholes = self.__generator.random_sequence_of_cells()
@@ -121,11 +121,8 @@ class Labyrinth(ILabyrinth):
     def set_size(self, size: int):
         self.__size = size
 
-    def set_exit(self, exit_ = None):
-        if exit_:
-            (row, col), wall_name = exit_
-        else:
-            (row, col), wall_name = random.choice(self.get_monoliths())
+    def set_exit(self, exit_):
+        (row, col), wall_name = exit_
         self.__maze[row][col].set_wall(wall_name, 'exit')
         return ((row, col), wall_name)
 
@@ -168,8 +165,8 @@ class Labyrinth(ILabyrinth):
         for maze_row in data:
             new_maze_row = []
             for cell in maze_row:
-                row, col = cell['position']
-                walls = cell['walls']
+                row, col = cell.get('position')
+                walls = cell.get('walls')
                 new_maze_row.append(Cell(row, col, walls))
             new_maze.append(new_maze_row)
         self.__maze = deepcopy(new_maze)
