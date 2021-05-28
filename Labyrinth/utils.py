@@ -11,6 +11,14 @@ def validate(assertion: bool, error_message: str):
         return False
     return True
 
+def validate_size(size):
+    try:
+        assert (int(size) >= 4) and (int(size) <= 10)
+    except:
+        print("Labyrinth size must be an integer from 4 to 10")
+        return False
+    return True
+
 def is_valid_command(cmd: IUserCommand):
     assertion = cmd in supported_commands
     error_message = f"Command not supported"
@@ -36,22 +44,5 @@ def parse_user_input(user_input: str):
 
     return (valid_cmd, valid_args)
 
-def is_between(value, left, right):
-    return left <= value and value <= right
-
-def get_duplicate(list_: list):
-    tup = tuple(tuple(ele) for ele in list_)
-    res = [ele for ele, count in Counter(tup).items() if count > 1]
-    return res
-
-def get_matching_wall(row: int, col: int, wall_type: str):
-    if wall_type == 'top':
-        return ((row-1, col), 'bottom')
-    if wall_type == 'bottom':
-        return ((row+1, col), 'top')
-    if wall_type == 'left':
-        return ((row, col-1), 'right')
-    if wall_type == 'right':
-        return((row, col+1), 'left')
 
 

@@ -1,7 +1,7 @@
 import random
 
 from services.generator import IGenerator
-from utils import get_matching_wall, is_between
+from helpers import get_matching_wall, is_between
 
 random.seed(0)
 

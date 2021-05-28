@@ -6,14 +6,6 @@ from collections import Counter
 
 SCHEMA_PATH = '/Users/khueluu/Desktop/NSU/Sem2/SE/SE/Labyrinth/schema/labyrinth.schema.json'
 
-def validate(assertion: bool, error_message: str):
-    try:
-        assert assertion
-    except:
-        print(error_message)
-        return False
-    return True
-
 def is_between(value, left, right):
     return left <= value and value <= right
 

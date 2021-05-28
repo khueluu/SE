@@ -34,5 +34,11 @@ messages = {
         'treasure': 'TREASURE!',
         'wormhole': 'WORMHOLE!',
         'wormhole_next': 'Moved to next wormhole.'
-    }
+    },
+    'welcome': f'{"="*20} Welcome to Labyrith {"="*20}',
+    'quit_no_save': '\nQuit game without saving',
+    'choose_size': '$> Please select labyrinth size from 4 to 10: ',
+    'choose_file': '$> Please type file path to load labyrinth: ',
+    'init': "$> To create new game, type 'create'. To load a game, type 'load': ",
+    'init_error': "Please only type 'create' or 'load' without any arguments"
 }

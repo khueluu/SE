@@ -147,12 +147,11 @@ class Loader(IInputOutput):
         with open(filepath, 'r') as f:
             state_dict = json.load(f)
 
-        validate_schema(state_dict)
-        # try:
-        #     validate_schema(state_dict)
-        # except ValidationError as err:
-        #     print(f'Schema validation error: {err.message}')
-        #     sys.exit()
+        try:
+            validate_schema(state_dict)
+        except ValidationError as err:
+            print(f'Schema validation error: {err.message}')
+            sys.exit()
 
         self.__lbr.set_size(state_dict['size'])
         self.__lbr.set_maze_from_data(state_dict['maze'])
