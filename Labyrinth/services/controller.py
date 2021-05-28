@@ -11,8 +11,7 @@ class IController(metaclass=ABCMeta):
     @abstractmethod
     def get_labyrinth(self): pass
 
-    @abstractmethod
-    def save(self, output_file: str): pass
 
+class IInputOutput(metaclass=ABCMeta):
     @abstractmethod
-    def load(self, input_file: str): pass
+    def __call__(self, filepath: str): pass

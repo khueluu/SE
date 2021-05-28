@@ -1,0 +1,139 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://example.com/labyrinth.schema.json",
+    "title": "Labyrinth",
+    "description": "A state_dict of a Labyrinth",
+    "type": "object",
+    "properties": {
+        "size": {
+            "description": "The size of a Labyrinth",
+            "type": "integer",
+            "minimum": 4,
+            "maximum": 10
+        },
+        "maze": {
+            "description": "The matrix of positions of Labyrinth's cells",
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 10,
+            "items": {
+                "type": "array",
+                "items": {
+                    "$ref": "#definitions/cell"
+                }
+            }
+        },
+        "wormholes": {
+            "description": "The list of position of wormholes",
+            "type": "array",
+            "items": {
+                "$ref": "#definitions/position"
+            },
+            "uniqueItems": true
+        },
+        "treasure": {
+            "description": "The matrix of cells of a Labyrinth",
+            "anyOf": [{
+                    "$ref": "#definitions/position"
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        },
+        "exit": {
+            "description": "The position of exit cell",
+            "$ref": "#definitions/wall_data"
+        },
+        "walls": {
+            "description": "The list of wall positions and corresponding wall names",
+            "type": "array",
+            "items": {
+                "$ref": "#definitions/wall_data"
+            }
+        },
+        "current": {
+            "description": "The current posision of the player",
+            "$ref": "#definitions/position"
+        },
+        "found_treasure": {
+            "description": "The state of whether a treasure is found by the player",
+            "type": "boolean"
+        }
+    },
+    "required": [
+        "size",
+        "maze",
+        "wormholes",
+        "treasure",
+        "exit",
+        "walls",
+        "current",
+        "found_treasure"
+    ],
+    "definitions": {
+        "position": {
+            "description": "A tuple of row and column index of a Labyrinth's cell",
+            "type": "array",
+            "items": {
+                "type": "integer"
+            },
+            "minItems": 2,
+            "maxItems": 2
+        },
+        "wall_data": {
+            "description": "A array contains a position Labyrinth's cell and a wall name",
+            "type": "array",
+            "items": [{
+                    "$ref": "#definitions/position"
+                },
+                {
+                    "enum": ["top", "bottom", "left", "right"]
+                }
+            ],
+            "minItems": 2,
+            "maxItems": 2,
+            "additionalItems": false
+        },
+        "cell": {
+            "description": "A cell of a Labyrinth",
+            "type": "object",
+            "required": ["position", "walls"],
+            "additionalItems": false,
+            "properties": {
+                "position": {
+                    "$ref": "#definitions/position"
+                },
+                "walls": {
+                    "type": "object",
+                    "required": ["top", "bottom", "left", "right"],
+                    "additionalItems": false,
+                    "properties": {
+                        "top": {
+                            "$ref": "#definitions/wall_type"
+                        },
+                        "bottom": {
+                            "$ref": "#definitions/wall_type"
+                        },
+                        "left": {
+                            "$ref": "#definitions/wall_type"
+                        },
+                        "right": {
+                            "$ref": "#definitions/wall_type"
+                        }
+                    }
+                }
+            }
+        },
+        "wall_type": {
+            "description": "A wall type of a Labyrinth's cell",
+            "anyOf": [{
+                    "type": "null"
+                },
+                {
+                    "enum": ["monolith", "exit", "wall"]
+                }
+            ]
+        }
+    }
+}

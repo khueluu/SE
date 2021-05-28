@@ -5,6 +5,7 @@ import os
 from impl.labyrinth import Labyrinth
 from impl.generator import Generator
 from impl.validator import Validator
+from config import supported_commands
 from utils import *
 
 def play(lbr):

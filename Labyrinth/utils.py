@@ -1,18 +1,7 @@
 
 from collections import Counter
 from services.command import IUserCommand
-from impl.commands import *
-
-supported_commands = {
-    "up": GoUp(),
-    "down": GoDown(),
-    "left": GoLeft(),
-    "right": GoRight(),
-    "skip": Skip(),
-    "quit": Quit(),
-    "save": Save(),
-    "load": Load()
-}
+from config import supported_commands
 
 def validate(assertion: bool, error_message: str):
     try:

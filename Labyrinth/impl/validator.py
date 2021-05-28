@@ -1,6 +1,6 @@
 from services.validator import IValidator
 from services.labyrinth import ILabyrinth
-from utils import is_between, get_duplicate, get_matching_wall
+from helpers import is_between, get_duplicate, get_matching_wall
 
 class Validator(IValidator):
     def validate(self, labyrinth: ILabyrinth):
@@ -74,5 +74,3 @@ class Validator(IValidator):
                     exit_count += 1
         return exit_count == 1
         
-
-

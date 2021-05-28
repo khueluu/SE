@@ -60,12 +60,15 @@ class Labyrinth(ILabyrinth):
     def create(self, size: int, generator: IGenerator):
         self.__size = size
         self.__generator = generator
-        self.__maze = self.set_maze(size)
-        self.__exit = self.set_exit(random.choice(self.get_monoliths()))
+
         self.__current = self.__generator.random_cell()
         self.__treasure = self.__generator.random_cell()
         self.__wormholes = self.__generator.random_sequence_of_cells()
-        self.__walls = self.set_walls(self.__generator.random_walls())
+        
+        self.set_maze(size)
+        self.set_exit(random.choice(self.get_monoliths()))
+        self.set_walls(self.__generator.random_walls())
+        
 
     def do_found_treasure(self):
         self.__found_treasure = True
@@ -121,10 +124,10 @@ class Labyrinth(ILabyrinth):
     def set_size(self, size: int):
         self.__size = size
 
-    def set_exit(self, exit_):
+    def set_exit(self, exit_: tuple):
         (row, col), wall_name = exit_
         self.__maze[row][col].set_wall(wall_name, 'exit')
-        return ((row, col), wall_name)
+        self.__exit = ((row, col), wall_name)
 
     def set_treasure(self, treasure):
         self.__treasure = treasure
@@ -136,7 +139,7 @@ class Labyrinth(ILabyrinth):
         for wall_data in walls:
             (row, col), wall_name = wall_data
             self.__maze[row][col].set_wall(wall_name, 'wall')
-        return walls
+        self.__walls = walls
 
     def set_current(self, current: tuple):
         self.__current = current
@@ -158,7 +161,7 @@ class Labyrinth(ILabyrinth):
                 cell = Cell(row, col, walls)
                 maze_row.append(cell)
             maze.append(tuple(maze_row))
-        return tuple(maze)
+        self.__maze = tuple(maze)
 
     def set_maze_from_data(self, data: list):
         new_maze = []
@@ -170,3 +173,4 @@ class Labyrinth(ILabyrinth):
                 new_maze_row.append(Cell(row, col, walls))
             new_maze.append(tuple(new_maze_row))
         self.__maze = tuple(new_maze)
+

@@ -2,7 +2,7 @@ import sys
 
 from services.command import IUserCommand
 from services.labyrinth import ILabyrinth
-from impl.controller import Controller
+from impl.controller import Controller, Saver, Loader
 
 class GoUp(IUserCommand):
     def get_command_tag(self):
@@ -88,8 +88,8 @@ class Save(IUserCommand):
         return 1
 
     def __call__(self, lbr: ILabyrinth, output_file='labyrinth.txt'): 
-        controller = Controller(lbr)
-        controller.save(output_file)
+        saver = Saver(lbr)
+        saver(output_file)
         print(f'Saved to {output_file} and quit')
         sys.exit()
 
@@ -102,8 +102,7 @@ class Load(IUserCommand):
         return 1
 
     def __call__(self, lbr: ILabyrinth, input_file: str):
-        controller = Controller(lbr)
-        controller.load(input_file)
-        new_lbr = controller.get_labyrinth()
+        loader = Loader(lbr)
+        new_lbr = loader(input_file)
         print(f"Loaded labyrinth of size {new_lbr.get_size()}x{new_lbr.get_size()}")
         return new_lbr

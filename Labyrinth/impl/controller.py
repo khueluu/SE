@@ -1,16 +1,14 @@
 import sys
 import json
+from jsonschema import validate
+from jsonschema.exceptions import ValidationError
 from copy import deepcopy
-from services.controller import IController
+
+from services.controller import IController, IInputOutput
 from services.labyrinth import ILabyrinth
+from impl.validator import Validator
+from helpers import is_same_cell, get_next_idx_of_seq, validate_schema
 from mapper import *
-
-def is_same_cell(cell_1: tuple, cell_2: tuple):
-    return (cell_1[0] == cell_2[0]) and (cell_1[1] == cell_2[1])
-
-def get_next_idx_of_seq(idx: int, seq_length: int):
-    next_idx = idx + 1
-    return next_idx if next_idx < seq_length else 0
 
 
 class Controller(IController):
@@ -119,8 +117,13 @@ class Controller(IController):
 
     def get_labyrinth(self):
         return deepcopy(self.__lbr)
+    
 
-    def save(self, output_file='labyrinth.txt'):
+class Saver(IInputOutput):
+    def __init__(self, lbr: ILabyrinth):
+        self.__lbr = lbr
+
+    def __call__(self, filepath: str):
         state_dict = {
             'size': self.__lbr.get_size(),
             'maze': self.__lbr.get_maze(),
@@ -132,18 +135,25 @@ class Controller(IController):
             'found_treasure': self.__lbr.get_found_treasure()
         }
 
-        with open(output_file, 'w') as f:
+        with open(filepath, 'w') as f:
             f.write(json.dumps(state_dict))
 
-    def load(self, input_file: str):
-        with open(input_file, 'r') as f:
-            data = json.load(f)
-        state_dict = deepcopy(data)
 
-        # create new labyrinth + pass state_dict to the labyrinth
-        # make sure the labyrinth check the state_dict, raise error if no treasure or exit, etc.
+class Loader(IInputOutput):
+    def __init__(self, lbr: ILabyrinth):
+        self.__lbr = lbr
 
-        # save the state of the labyrinth, remove
+    def __call__(self, filepath: str):
+        with open(filepath, 'r') as f:
+            state_dict = json.load(f)
+
+        validate_schema(state_dict)
+        # try:
+        #     validate_schema(state_dict)
+        # except ValidationError as err:
+        #     print(f'Schema validation error: {err.message}')
+        #     sys.exit()
+
         self.__lbr.set_size(state_dict['size'])
         self.__lbr.set_maze_from_data(state_dict['maze'])
         self.__lbr.set_wormholes(state_dict['wormholes'])
@@ -152,4 +162,6 @@ class Controller(IController):
         self.__lbr.set_walls(state_dict['walls'])
         self.__lbr.set_current(state_dict['current'])
         self.__lbr.set_found_treasure(state_dict['found_treasure'])
-    
+
+        return deepcopy(self.__lbr)
+
