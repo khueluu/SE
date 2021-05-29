@@ -163,10 +163,10 @@ class Loader(IInputOutput):
         self.__lbr.set_found_treasure(state_dict['found_treasure'])
 
         lbr_val = Validator()
-        is_valid = lbr_val.validate(self.__lbr)
+        is_valid_labyrinth, invalid_objects = lbr_val.validate(self.__lbr, return_invalid=True)
         
-        if not is_valid:
-            print('Labyrinth validation error: Labyrinth values are invalid')
+        if not is_valid_labyrinth:
+            print(f'These Labyrinth values are invalid: {invalid_objects}')
             sys.exit()
 
         return deepcopy(self.__lbr)
