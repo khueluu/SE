@@ -40,7 +40,7 @@ def generate_labyrinth(size, wall_rate=0.5, sequence_length=5):
         is_valid_labyrinth = validator.validate(lbr)
         if is_valid_labyrinth: finished = True
 
-    print(f'Created labyrinth of size {lbr.get_size()}x{lbr.get_size()} after {count} generation(s).')
+    print(f'Created labyrinth of size {lbr.size}x{lbr.size} after {count} generation(s).')
     return lbr
 
 def create_labyrinth():

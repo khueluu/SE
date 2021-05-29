@@ -2,11 +2,13 @@ from abc import *
 from services.generator import IGenerator
 
 class ICell(metaclass=ABCMeta):
+    @property
     @abstractmethod
-    def get_position(self): pass
+    def position(self): pass
 
+    @property
     @abstractmethod
-    def get_walls(self): pass
+    def walls(self): pass
 
     @abstractmethod
     def set_wall(self, wall_name: str, wall_type: str): pass
@@ -25,59 +27,72 @@ class ILabyrinth(metaclass=ABCMeta):
     @abstractmethod
     def do_found_treasure(self): pass
 
-    # Getters
+    @property
     @abstractmethod
-    def get_size(self): pass
+    def size(self):
+        return self.__size
+
+    @size.setter
+    @abstractmethod
+    def size(self, size: int):
+        self.__size = size
+
+    @property
+    @abstractmethod
+    def maze(self): pass
+
+    @maze.setter
+    @abstractmethod
+    def maze(self, data): pass
+
+    @property
+    @abstractmethod
+    def wormholes(self): pass
+
+    @wormholes.setter
+    @abstractmethod
+    def wormholes(self, data: tuple): pass
+
+    @property
+    @abstractmethod
+    def found_treasure(self): pass
+
+    @found_treasure.setter
+    @abstractmethod
+    def found_treasure(self, data: bool): pass
+
+    @property
+    @abstractmethod
+    def current(self): pass
+
+    @current.setter
+    @abstractmethod
+    def current(self, data: tuple): pass
+
+    @property
+    @abstractmethod
+    def treasure(self): pass
     
+    @treasure.setter
     @abstractmethod
-    def get_exit(self): pass
+    def treasure(self, data: tuple): pass
+
+    @property
+    @abstractmethod
+    def walls(self): pass
+
+    @walls.setter
+    @abstractmethod
+    def walls(self, data: tuple): pass
+
+    @property
+    @abstractmethod
+    def monoliths(self): pass
+
+    @property
+    @abstractmethod
+    def exit(self): pass
     
+    @exit.setter
     @abstractmethod
-    def get_treasure(self): pass
-
-    @abstractmethod
-    def get_wormholes(self): pass
-
-    @abstractmethod
-    def get_wormhole_by_idx(self, idx: int): pass
-
-    @abstractmethod
-    def get_walls(self): pass
-
-    @abstractmethod
-    def get_current(self): pass
-
-    @abstractmethod
-    def get_found_treasure(self): pass
-
-    @abstractmethod
-    def get_maze(self): pass
-
-    # Setters
-    @abstractmethod
-    def set_size(self, size: int): pass
-
-    @abstractmethod
-    def set_exit(self, exit_: tuple): pass
-
-    @abstractmethod
-    def set_treasure(self, treasure: tuple): pass
-
-    @abstractmethod
-    def set_wormholes(self, wormholes: tuple): pass
-
-    @abstractmethod
-    def set_walls(self, walls: tuple): pass
-
-    @abstractmethod
-    def set_current(self, current: tuple): pass
-
-    @abstractmethod
-    def set_found_treasure(self, found_treasure: bool): pass
-    
-    @abstractmethod
-    def set_maze(self, size: int): pass
-
-    @abstractmethod
-    def set_maze_from_data(self, data: list): pass
-
+    def exit(self, data: tuple): pass

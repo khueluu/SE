@@ -104,5 +104,5 @@ class Load(IUserCommand):
     def __call__(self, lbr: ILabyrinth, input_file: str):
         loader = Loader(lbr)
         new_lbr = loader(input_file)
-        print(f"Loaded labyrinth of size {new_lbr.get_size()}x{new_lbr.get_size()}")
+        print(f"Loaded labyrinth of size {new_lbr.size}x{new_lbr.size}")
         return new_lbr

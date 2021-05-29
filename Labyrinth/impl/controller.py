@@ -17,7 +17,7 @@ class Controller(IController):
 
     # Helpers
     def check_exit(self):
-        if self.__lbr.get_found_treasure():
+        if self.__lbr.found_treasure:
             print(messages['win'])
             sys.exit()
     
@@ -25,7 +25,7 @@ class Controller(IController):
         mapper = movement_mapper[direction]
         wall_type = mapper['wall_to_check']
         row, col = cell
-        cell_wall_dict = self.__lbr[row][col].get_walls()
+        cell_wall_dict = self.__lbr[row][col].walls
         return cell_wall_dict[wall_type]
     
     def do_step_impossible(self, wall_type: str):
@@ -38,8 +38,9 @@ class Controller(IController):
         row, col = cell
         new_row = row + mapper['row_change']
         new_col = col + mapper['col_change']
+        
         new_cell = (new_row, new_col)
-        self.__lbr.set_current(new_cell)
+        self.__lbr.current = new_cell
         print(messages['step_possible'])
         
         return new_cell
@@ -52,10 +53,8 @@ class Controller(IController):
 
     # Treasure
     def is_treasure(self, cell: tuple):
-        treasure = self.__lbr.get_treasure()
-        if not treasure:
-            return False
-        return is_same_cell(cell, treasure)
+        treasure = self.__lbr.treasure
+        return False if not treasure else is_same_cell(cell, treasure)
     
     def check_treasure(self, cell: tuple):
         if self.is_treasure(cell):
@@ -65,29 +64,29 @@ class Controller(IController):
 
     # Wormhole
     def is_wormhole(self, cell: tuple):
-        wormholes = self.__lbr.get_wormholes()
+        wormholes = self.__lbr.wormholes
         for wormhole in wormholes:
             if is_same_cell(cell, wormhole):
                 return True
         return False
 
     def get_wormhole_idx(self, cell: tuple):
-        wormholes = self.__lbr.get_wormholes()
+        wormholes = self.__lbr.wormholes
         for idx, wormhole in enumerate(wormholes):
             if is_same_cell(cell, wormhole):
                 return idx
 
     def get_next_wormhole(self, current_idx: int):
-        wormholes = self.__lbr.get_wormholes()
+        wormholes = self.__lbr.wormholes
         wormholes_len = len(wormholes)
         next_idx = get_next_idx_of_seq(current_idx, wormholes_len)
-        return self.__lbr.get_wormhole_by_idx(idx=next_idx)
+        return wormholes[next_idx]
 
     def move_through_wormhole(self, cell: tuple):
         current_idx = self.get_wormhole_idx(cell)
         next_wormhole = self.get_next_wormhole(current_idx)
         
-        self.__lbr.set_current(next_wormhole)
+        self.__lbr.current = next_wormhole
         print(messages['objects']['wormhole_next'])
 
         self.check_treasure(next_wormhole)
@@ -102,7 +101,7 @@ class Controller(IController):
     # Actions
     def move(self, direction: str):
         mapper = movement_mapper[direction]
-        current_cell = self.__lbr.get_current()
+        current_cell = self.__lbr.current
         directing_wall = self.get_directing_wall(current_cell, direction)
 
         if directing_wall:
@@ -112,7 +111,7 @@ class Controller(IController):
 
     def skip(self):
         print(messages['skip'])
-        current_cell = self.__lbr.get_current()
+        current_cell = self.__lbr.current
         self.check_wormhole(current_cell, verbose=False)
 
     def get_labyrinth(self):
@@ -125,14 +124,14 @@ class Saver(IInputOutput):
 
     def __call__(self, filepath: str):
         state_dict = {
-            'size': self.__lbr.get_size(),
-            'maze': self.__lbr.get_maze(),
-            'wormholes': self.__lbr.get_wormholes(),
-            'treasure': self.__lbr.get_treasure(),
-            'exit': self.__lbr.get_exit(),
-            'walls': self.__lbr.get_walls(),
-            'current': self.__lbr.get_current(),
-            'found_treasure': self.__lbr.get_found_treasure()
+            'size': self.__lbr.size,
+            'maze': self.__lbr.maze,
+            'wormholes': self.__lbr.wormholes,
+            'treasure': self.__lbr.treasure,
+            'exit': self.__lbr.exit,
+            'walls': self.__lbr.walls,
+            'current': self.__lbr.current,
+            'found_treasure': self.__lbr.found_treasure
         }
 
         with open(filepath, 'w') as f:
@@ -153,14 +152,14 @@ class Loader(IInputOutput):
             print(f'Schema validation error: {err.message}')
             sys.exit()
 
-        self.__lbr.set_size(state_dict['size'])
-        self.__lbr.set_maze_from_data(state_dict['maze'])
-        self.__lbr.set_wormholes(state_dict['wormholes'])
-        self.__lbr.set_treasure(state_dict['treasure'])
-        self.__lbr.set_exit(state_dict['exit'])
-        self.__lbr.set_walls(state_dict['walls'])
-        self.__lbr.set_current(state_dict['current'])
-        self.__lbr.set_found_treasure(state_dict['found_treasure'])
+        self.__lbr.size = state_dict['size']
+        self.__lbr.maze = state_dict['maze']
+        self.__lbr.wormholes = state_dict['wormholes']
+        self.__lbr.treasure = state_dict['treasure']
+        self.__lbr.exit = state_dict['exit']
+        self.__lbr.walls = state_dict['walls']
+        self.__lbr.current = state_dict['current']
+        self.__lbr.found_treasure = state_dict['found_treasure']
 
         lbr_val = Validator()
         is_valid_labyrinth, invalid_objects = lbr_val.validate(self.__lbr, return_invalid=True)

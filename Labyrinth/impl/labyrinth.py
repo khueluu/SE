@@ -11,11 +11,13 @@ class Cell(ICell):
     def __init__(self, row: int, col: int, walls: dict):
         self.__position = (row, col)
         self.__walls = walls
-
-    def get_position(self):
+    
+    @property
+    def position(self):
         return self.__position
-
-    def get_walls(self):
+    
+    @property
+    def walls(self):
         return deepcopy(self.__walls)
 
     def set_wall(self, wall_name: str, wall_type: str):
@@ -23,8 +25,8 @@ class Cell(ICell):
     
     def get_dict(self):
         return {
-            'position': self.get_position(),
-            'walls': self.get_walls()
+            'position': self.position,
+            'walls': self.walls
         }
 
 
@@ -39,6 +41,7 @@ class Labyrinth(ILabyrinth):
         self.__wormholes = None
         self.__generator = None
         self.__walls = None
+        self.__monoliths = None
 
     def __getitem__(self, idx: int):
         if self.__maze:
@@ -64,53 +67,26 @@ class Labyrinth(ILabyrinth):
         self.__current = self.__generator.random_cell()
         self.__treasure = self.__generator.random_cell()
         self.__wormholes = self.__generator.random_sequence_of_cells()
-        
-        self.set_maze(size)
-        self.set_exit(random.choice(self.get_monoliths()))
-        self.set_walls(self.__generator.random_walls())
-        
 
+        self.maze = size
+        self.exit = random.choice(self.monoliths)
+        self.walls = self.__generator.random_walls()
+        
     def do_found_treasure(self):
         self.__found_treasure = True
         self.__treasure = None
 
-    # Getters
-    def get_size(self):
+    @property
+    def size(self):
         return self.__size
-    
-    def get_exit(self):
-        return deepcopy(self.__exit)
-    
-    def get_treasure(self):
-        return deepcopy(self.__treasure)
 
-    def get_monoliths(self):
-        monoliths = []
-        for row in self.__maze:
-            for cell in row:
-                cell_wall_dict = cell.get_walls()
-                for wall_name, wall_type in cell_wall_dict.items():
-                    if wall_type == 'monolith':
-                        monolith = (cell.get_position(), wall_name)
-                        monoliths.append(monolith)
-        return tuple(monoliths)
+    @size.setter 
+    def size(self, size: int):
+        self.__size = size
 
-    def get_wormholes(self):
-        return self.__wormholes
-
-    def get_wormhole_by_idx(self, idx: int):
-        return self.__wormholes[idx]
-
-    def get_walls(self):
-        return self.__walls
-
-    def get_current(self):
-        return self.__current
-
-    def get_found_treasure(self):
-        return self.__found_treasure
-
-    def get_maze(self):
+    @property
+    def maze(self):
+        if not self.__maze: return None
         maze = []
         for row in self.__maze:
             maze_row = []
@@ -120,34 +96,80 @@ class Labyrinth(ILabyrinth):
             maze.append(tuple(maze_row))
         return tuple(maze)
 
-    # Setters
-    def set_size(self, size: int):
-        self.__size = size
+    @maze.setter
+    def maze(self, data):
+        if isinstance(data, int):
+            self.set_maze_from_size(size=data)
+        elif isinstance(data, list):
+            self.set_maze_from_data(data=data)
 
-    def set_exit(self, exit_: tuple):
-        (row, col), wall_name = exit_
-        self.__maze[row][col].set_wall(wall_name, 'exit')
-        self.__exit = ((row, col), wall_name)
+    @property
+    def wormholes(self):
+        return self.__wormholes
 
-    def set_treasure(self, treasure):
-        self.__treasure = treasure
+    @wormholes.setter
+    def wormholes(self, data: tuple):
+        self.__wormholes = data
 
-    def set_wormholes(self, wormholes: tuple):
-        self.__wormholes = wormholes
+    @property
+    def found_treasure(self):
+        return self.__found_treasure
 
-    def set_walls(self, walls: tuple):
-        for wall_data in walls:
+    @found_treasure.setter
+    def found_treasure(self, data: bool):
+        self.__found_treasure = data
+
+    @property
+    def current(self):
+        return self.__current
+
+    @current.setter
+    def current(self, data: tuple):
+        self.__current = data
+
+    @property
+    def treasure(self):
+        return self.__treasure
+    
+    @treasure.setter
+    def treasure(self, data: tuple):
+        self.__treasure = data
+
+    @property
+    def walls(self):
+        return self.__walls
+
+    @walls.setter
+    def walls(self, data: tuple):
+        for wall_data in data:
             (row, col), wall_name = wall_data
             self.__maze[row][col].set_wall(wall_name, 'wall')
-        self.__walls = walls
+        self.__walls = data
 
-    def set_current(self, current: tuple):
-        self.__current = current
+    @property
+    def monoliths(self):
+        monoliths = []
+        for row in self.__maze:
+            for cell in row:
+                cell_wall_dict = cell.walls
+                for wall_name, wall_type in cell_wall_dict.items():
+                    if wall_type == 'monolith':
+                        monolith = (cell.position, wall_name)
+                        monoliths.append(monolith)
+        return tuple(monoliths)
 
-    def set_found_treasure(self, found_treasure: bool):
-        self.__found_treasure = found_treasure
+    @property
+    def exit(self):
+        return self.__exit
     
-    def set_maze(self, size: int):
+    @exit.setter
+    def exit(self, data: tuple):
+        (row, col), wall_name = data
+        self.__maze[row][col].set_wall(wall_name, 'exit')
+        self.__exit = data
+
+
+    def set_maze_from_size(self, size: int):
         maze = []
         for row in range(size):
             maze_row = []
@@ -163,6 +185,7 @@ class Labyrinth(ILabyrinth):
             maze.append(tuple(maze_row))
         self.__maze = tuple(maze)
 
+    
     def set_maze_from_data(self, data: list):
         new_maze = []
         for maze_row in data:
@@ -173,4 +196,6 @@ class Labyrinth(ILabyrinth):
                 new_maze_row.append(Cell(row, col, walls))
             new_maze.append(tuple(new_maze_row))
         self.__maze = tuple(new_maze)
+
+
 
