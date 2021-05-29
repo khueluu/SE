@@ -37,3 +37,15 @@ def validate_schema(instance: dict):
 
     val = Draft7Validator(schema=schema)
     val.validate(instance)
+
+def check_duplicated_wall(wall_data_list):
+    tups = []
+
+    for wall_data in wall_data_list:
+        (row, col), wall_name = wall_data
+        tup = (row, col, wall_name)
+        tups.append(tup)
+        
+    tups = tuple(tups)
+    duplicated = get_duplicate(list_=tups)
+    return bool(duplicated)

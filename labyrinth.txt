@@ -183,6 +183,6 @@
             [1, 1], "top"
         ]
     ],
-    "current": [0, 2],
+    "current": [0, 15],
     "found_treasure": false
 }

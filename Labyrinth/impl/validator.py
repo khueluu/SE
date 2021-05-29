@@ -1,6 +1,6 @@
 from services.validator import IValidator
 from services.labyrinth import ILabyrinth
-from helpers import is_between, get_duplicate, get_matching_wall
+from helpers import is_between, get_duplicate, check_duplicated_wall, get_matching_wall
 
 class Validator(IValidator):
     def validate(self, labyrinth: ILabyrinth):
@@ -31,13 +31,14 @@ class Validator(IValidator):
     def validate_walls(self, labyrinth: ILabyrinth):
         walls = labyrinth.get_walls()
         N = labyrinth.get_size()
+
         for wall in walls:
             (row, col), wall_position = wall
             if (not is_between(row, 0, N)) or (not is_between(col, 0, N)):
                 return False
-        duplicated = get_duplicate(walls)
-        if duplicated: return False
-        return True
+
+        is_duplicated = check_duplicated_wall(walls)
+        return is_duplicated
 
     def validate_wormholes(self, labyrinth):
         wormholes = labyrinth.get_wormholes()
