@@ -26,6 +26,7 @@ def generate_labyrinth(size, wall_rate=0.5, sequence_length=5):
     validator = Validator()
     finished = False
     count = 0
+
     while not finished:
         count += 1
         generator = Generator(
@@ -37,9 +38,8 @@ def generate_labyrinth(size, wall_rate=0.5, sequence_length=5):
         lbr.create(size=size, generator=generator)
         
         is_valid_labyrinth = validator.validate(lbr)
-        if is_valid_labyrinth:
-            finished = True
-            
+        if is_valid_labyrinth: finished = True
+
     print(f'Created labyrinth of size {lbr.get_size()}x{lbr.get_size()} after {count} generation(s).')
     return lbr
 
@@ -49,11 +49,10 @@ def create_labyrinth():
         while not(finished):
             size = input(messages['choose_size'])
             is_valid = validate_size(size)
-            if is_valid:
-                size = int(size)
-                lbr = generate_labyrinth(size=size, wall_rate=0.5, sequence_length=5)
-                finished = True
-                return lbr
+            if is_valid: finished = True
+                
+        lbr = generate_labyrinth(size=int(size), wall_rate=0.5, sequence_length=5)    
+        return lbr
     except KeyboardInterrupt:
         print(messages['quit_no_save'])
         sys.exit()
@@ -63,20 +62,19 @@ def load_labyrinth():
     try:
         while not(finished):
             input_file = input(messages['choose_file'])
-            is_valid = validate(os.path.isfile(input_file), "File not found")
-            if is_valid:
-                cmd = supported_commands['load']
-                lbr = cmd(lbr=Labyrinth(), input_file=input_file)
-                finished = True
-                return lbr
+            is_valid_file = validate(os.path.isfile(input_file), "File not found")
+            if is_valid_file: finished = True
+        
+        cmd = supported_commands['load']
+        lbr = cmd(lbr=Labyrinth(), input_file=input_file)
+        return lbr
     except KeyboardInterrupt:
         print(messages['quit_no_save'])
         sys.exit()
     
 def initialize():
     print(messages['welcome'])
-
-    supported_cmds = {
+    supported_init_cmds = {
         'create': create_labyrinth,
         'load': load_labyrinth
     }
@@ -87,14 +85,14 @@ def initialize():
             cmd = input(messages['init'])
             cmd = cmd.strip().lower()
 
-            assertion = cmd in supported_cmds.keys()
+            assertion = cmd in supported_init_cmds.keys()
             error_message = messages['init_error']
             is_valid_cmd = validate(assertion, error_message)
+            if is_valid_cmd: finished = True
 
-            if is_valid_cmd:
-                func = supported_cmds[cmd]
-                lbr = func()
-                return lbr
+        func = supported_init_cmds[cmd]
+        lbr = func()
+        return lbr
     except KeyboardInterrupt:
         print(messages['quit_no_save'])
         sys.exit()

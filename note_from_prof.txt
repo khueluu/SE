@@ -1,5 +1,2 @@
 - draw class diagram, write responsibility of the class near the class (powerpoint, any tools, draw.io)
-- save and load in Saver and Loader classes (DONE)
-- use tuple instead of list (DONE)
-- use decoreator for property to have getter, setter
-- validate data to Labybrinth before loading it, raise an error if the input file is not correct (eg: treasure missing, exit missing, etc.) (DONE)
+- use decorator for property to have getter, setter
