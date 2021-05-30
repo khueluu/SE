@@ -4,9 +4,9 @@ from services.command import IUserCommand
 from services.labyrinth import ILabyrinth
 from impl.controller import Controller, Saver, Loader
 
-class GoUp(IUserCommand):
+class Go(IUserCommand):
     def get_command_tag(self):
-        return 'up'
+        return 'go'
     
     def get_args_count(self):
         return 0
@@ -17,43 +17,36 @@ class GoUp(IUserCommand):
         return controller.get_labyrinth()
 
 
-class GoDown(IUserCommand):
+class GoUp(Go):
+    def __init__(self):
+        super().__init__()
+        
+    def get_command_tag(self):
+        return 'up'
+
+
+class GoDown(Go):
+    def __init__(self):
+        super().__init__()
+
     def get_command_tag(self):
         return 'down'
 
-    def get_args_count(self):
-        return 0
 
-    def __call__(self, lbr: ILabyrinth):
-        controller = Controller(lbr)
-        controller.move(self.get_command_tag())
-        return controller.get_labyrinth()
+class GoLeft(Go):
+    def __init__(self):
+        super().__init__()
 
-
-class GoLeft(IUserCommand):
     def get_command_tag(self):
         return 'left'
 
-    def get_args_count(self):
-        return 0
 
-    def __call__(self, lbr: ILabyrinth):
-        controller = Controller(lbr)
-        controller.move(self.get_command_tag())
-        return controller.get_labyrinth()
+class GoRight(Go):
+    def __init__(self):
+        super().__init__()
 
-
-class GoRight(IUserCommand):
     def get_command_tag(self):
         return 'right'
-
-    def get_args_count(self):
-        return 0
-
-    def __call__(self, lbr: ILabyrinth):
-        controller = Controller(lbr)
-        controller.move(self.get_command_tag())
-        return controller.get_labyrinth()
 
 
 class Skip(IUserCommand):
@@ -78,7 +71,7 @@ class Quit(IUserCommand):
 
     def __call__(self, lbr: ILabyrinth):
         sys.exit('Quit game without saving')
-    
+
 
 class Save(IUserCommand):
     def get_command_tag(self):
