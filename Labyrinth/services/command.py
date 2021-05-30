@@ -1,4 +1,5 @@
 from abc import *
+from services.labyrinth import ILabyrinth
 
 class IUserCommand(metaclass = ABCMeta):
     @abstractmethod
@@ -8,5 +9,5 @@ class IUserCommand(metaclass = ABCMeta):
     def get_args_count(self): pass
 
     @abstractmethod
-    def __call__(self, lbr, *args, **kwargs): pass
+    def __call__(self, lbr: ILabyrinth, *args, **kwargs): pass
 
