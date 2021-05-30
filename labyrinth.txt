@@ -141,34 +141,31 @@
         [3, 2],
         [3, 3]
     ],
-    "treasure": [1, 0],
+    "treasure": null,
     "exit": [
         [3, 3], "bottom"
     ],
     "walls": [
         [
-            [1, 1], "bottom"
-        ],
-        [
-            [2, 1], "bottom"
-        ],
-        [
-            [0, 0], "bottom"
+            [0, 1], "bottom"
         ],
         [
             [3, 2], "top"
         ],
         [
-            [2, 3], "bottom"
+            [3, 1], "top"
         ],
         [
-            [3, 1], "top"
+            [2, 2], "bottom"
         ],
         [
             [1, 0], "top"
         ],
         [
-            [0, 1], "bottom"
+            [1, 1], "bottom"
+        ],
+        [
+            [2, 1], "bottom"
         ],
         [
             [3, 3], "top"
@@ -177,12 +174,15 @@
             [2, 1], "top"
         ],
         [
-            [2, 2], "bottom"
+            [0, 0], "bottom"
+        ],
+        [
+            [2, 3], "bottom"
         ],
         [
             [1, 1], "top"
         ]
     ],
-    "current": [0, 15],
-    "found_treasure": false
+    "current": [2, 2],
+    "found_treasure": true
 }

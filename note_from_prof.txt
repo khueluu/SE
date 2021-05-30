@@ -1,2 +1,2 @@
-- draw class diagram, write responsibility of the class near the class (powerpoint, any tools, draw.io)
+- draw class diagram, write responsibility of the class near the class (powerpoint, any tools, draw.io) (DONE)
 - use @property for Cell and Labyrinth (DONE)

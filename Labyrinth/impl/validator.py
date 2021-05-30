@@ -10,9 +10,7 @@ class Validator(IValidator):
             'wormholes': self.validate_wormholes(labyrinth),
             'monolith': self.validate_monolith(labyrinth),
             'exit': self.validate_exit(labyrinth),
-            'treasure': self.is_valid_position(
-                position=labyrinth.treasure,
-                lbr_size=labyrinth.size),
+            'treasure': self.validate_treasure(labyrinth),
             'current': self.is_valid_position(
                 position=labyrinth.current,
                 lbr_size=labyrinth.size)
@@ -93,4 +91,11 @@ class Validator(IValidator):
                 if 'exit' in cell_wall_list:
                     exit_count += 1
         return exit_count == 1
+
+    def validate_treasure(self, labyrinth: ILabyrinth):
+        treasure = labyrinth.treasure
+        if not treasure: return True
+        is_valid_treasure = self.is_valid_position(treasure, labyrinth.size)
+        return is_valid_treasure
+
         
